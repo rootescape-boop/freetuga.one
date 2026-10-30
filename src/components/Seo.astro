@@ -31,8 +31,8 @@ const jsonLd =
         description,
         image: [ogImage.href],
         datePublished: publishedTime?.toISOString(),
-        author: { '@type': 'Person', name: site.author },
-        publisher: { '@type': 'Person', name: site.title },
+        author: { '@type': 'Organization', name: site.title, url: canonical.origin },
+        publisher: { '@type': 'Organization', name: site.title, url: canonical.origin },
         mainEntityOfPage: canonical.href,
       }
     : {
@@ -41,6 +41,7 @@ const jsonLd =
         name: site.title,
         url: canonical.origin,
         description: site.description,
+        sameAs: [site.telegram, site.github],
       };
 ---
 

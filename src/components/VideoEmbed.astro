@@ -1,20 +1,50 @@
 ---
 import Icon from './Icon.astro';
+import { platformLabel, vkParts, type VideoPlatform } from '../lib/videos';
 
 interface Props {
-  platform: 'youtube' | 'rutube';
+  platform: VideoPlatform;
   id: string;
   title?: string;
   link?: string;
+  poster?: string;
   class?: string;
 }
 
-const { platform, id, title = 'Видео', link, class: className = '' } = Astro.props;
+const {
+  platform,
+  id,
+  title = 'Видео',
+  link,
+  poster: customPoster,
+  class: className = '',
+} = Astro.props;
 
 const posterCache: Map<string, string | null> =
   ((globalThis as { __posterCache?: Map<string, string | null> }).__posterCache ??= new Map());
 
+async function fetchVkPoster(): Promise<string | null> {
+  try {
+    const { oid, videoId } = vkParts(id);
+    if (!oid || !videoId) return null;
+
+    const target = encodeURIComponent(`https://vk.com/video${oid}_${videoId}`);
+    const response = await fetch(`https://vk.com/oembed?url=${target}&format=json`, {
+      headers: { accept: 'application/json' },
+      signal: AbortSignal.timeout(4000),
+    });
+    if (!response.ok) return null;
+
+    const data = (await response.json()) as { thumbnail_url?: string };
+    return typeof data.thumbnail_url === 'string' ? data.thumbnail_url : null;
+  } catch {
+    return null;
+  }
+}
+
 async function resolvePoster(): Promise<string | null> {
+  if (customPoster) return customPoster;
+
   const key = `${platform}:${id}`;
   if (posterCache.has(key)) return posterCache.get(key) ?? null;
 
@@ -22,7 +52,7 @@ async function resolvePoster(): Promise<string | null> {
 
   if (platform === 'youtube') {
     url = `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`;
-  } else {
+  } else if (platform === 'rutube') {
     try {
       const response = await fetch(`https://rutube.ru/api/video/${id}/`, {
         headers: { accept: 'application/json' },
@@ -35,6 +65,8 @@ async function resolvePoster(): Promise<string | null> {
     } catch {
       url = null;
     }
+  } else if (platform === 'vk') {
+    url = await fetchVkPoster();
   }
 
   posterCache.set(key, url);
@@ -42,7 +74,6 @@ async function resolvePoster(): Promise<string | null> {
 }
 
 const poster = await resolvePoster();
-const platformLabel = platform === 'youtube' ? 'YouTube' : 'Rutube';
 const fallback = `this.onerror=null;this.src='https://i.ytimg.com/vi/${id}/hqdefault.jpg'`;
 ---
 
@@ -53,22 +84,22 @@ const fallback = `this.onerror=null;this.src='https://i.ytimg.com/vi/${id}/hqdef
   data-id={link ? undefined : id}
   data-title={link ? undefined : title}
 >
-  {poster ? (
+  <span class="video__poster video__poster--fallback" aria-hidden="true"></span>
+
+  {poster && (
     <img
       class="video__poster"
       src={poster}
       alt=""
       loading="lazy"
       decoding="async"
-      onerror={platform === 'youtube' ? fallback : undefined}
+      onerror={platform === 'youtube' ? fallback : 'this.remove()'}
     />
-  ) : (
-    <span class="video__poster video__poster--fallback" aria-hidden="true"></span>
   )}
 
   <span class="video__badge">
     <Icon name="play" size={10} />
-    {platformLabel}
+    {platformLabel(platform)}
   </span>
 
   {link ? (

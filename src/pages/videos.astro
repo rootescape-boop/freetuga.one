@@ -4,12 +4,13 @@ import VideoEmbed from '../components/VideoEmbed.astro';
 import Icon from '../components/Icon.astro';
 import { getPosts, postHref } from '../lib/posts';
 import { dayMonth, plural } from '../lib/format';
+import { platformLabel } from '../lib/videos';
 
 const posts = (await getPosts()).filter((post) => post.data.videos.length > 0);
 const total = posts.reduce((sum, post) => sum + post.data.videos.length, 0);
 ---
 
-<BaseLayout title="Видео" description="Видеозаметки блога FreeTUGA001: YouTube и Rutube, встроенные без лишних запросов.">
+<BaseLayout title="Видео" description="Видеозаметки блога FreeTUGA001: YouTube, Rutube и VK Видео, встроенные без лишних запросов.">
   <section class="container-page pt-14 sm:pt-20">
     <p class="eyebrow">Видео</p>
     <div class="mt-3 flex flex-wrap items-end justify-between gap-5 border-b border-line pb-6">
@@ -39,6 +40,10 @@ const total = posts.reduce((sum, post) => sum + post.data.videos.length, 0);
             <span>
               {post.data.videos.length} {plural(post.data.videos.length, 'видео', 'видео', 'видео')}
             </span>
+            <span aria-hidden="true">·</span>
+            <span>
+              {[...new Set(post.data.videos.map((video) => platformLabel(video.platform)))].join(' · ')}
+            </span>
           </div>
 
           <div class="mt-4 grid gap-4">
@@ -47,6 +52,7 @@ const total = posts.reduce((sum, post) => sum + post.data.videos.length, 0);
                 platform={video.platform}
                 id={video.id}
                 title={video.title ?? post.data.title}
+                poster={video.poster}
                 link={postHref(post)}
               />
             ))}

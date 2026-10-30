@@ -14,13 +14,13 @@ const posts = defineCollection({
     tags: z.array(z.string()).default([]),
     draft: z.boolean().default(false),
     featured: z.boolean().default(false),
-    author: z.string().default('FreeTUGA001'),
     videos: z
       .array(
         z.object({
-          platform: z.enum(['youtube', 'rutube']),
+          platform: z.enum(['youtube', 'rutube', 'vk']),
           id: z.string(),
           title: z.string().optional(),
+          poster: z.string().optional(),
         }),
       )
       .default([]),

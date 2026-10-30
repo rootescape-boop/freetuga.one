@@ -79,10 +79,16 @@ collections:
             options:
               - { label: YouTube, value: youtube }
               - { label: Rutube, value: rutube }
+              - { label: VK Видео, value: vk }
           - name: id
             label: ID видео
             widget: string
-            hint: "YouTube: из watch?v=ID или youtu.be/ID. Rutube: 32 символа из rutube.ru/video/ID/"
+            hint: "YouTube: из watch?v=ID или youtu.be/ID. Rutube: 32 символа из rutube.ru/video/ID/. VK: из vk.com/video-12345678_456239017 — часть после /video."
+          - name: poster
+            label: Обложка вручную
+            widget: image
+            required: false
+            hint: "Необязательно. Пригодится для VK: если автопревью не загрузилось, поставьте свою картинку 16:9."
           - name: title
             label: Подпись
             widget: string
@@ -133,15 +139,24 @@ collections:
           - name: description
             label: Описание
             widget: text
-          - name: author
-            label: Автор
-            widget: string
           - name: email
             label: Почта
+            widget: string
+          - name: telegram
+            label: Ссылка на Telegram
             widget: string
           - name: github
             label: Ссылка на GitHub
             widget: string
+          - name: license
+            label: Лицензия
+            widget: string
+            hint: "Название лицензии для подвала сайта и страницы «О сайте»."
+          - name: donationUrl
+            label: Ссылка на донаты
+            widget: string
+            required: false
+            hint: "Можно оставить пустым. Если заполнить, на странице «О сайте» появится карточка поддержки."
           - name: startYear
             label: Год основания
             widget: number

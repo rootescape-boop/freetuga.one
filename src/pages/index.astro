@@ -6,6 +6,7 @@ import VideoEmbed from '../components/VideoEmbed.astro';
 import Icon from '../components/Icon.astro';
 import { collectTags, getPosts, postHref } from '../lib/posts';
 import { dayMonth, plural } from '../lib/format';
+import { platformLabel } from '../lib/videos';
 import { site } from '../lib/site';
 
 const posts = await getPosts();
@@ -64,7 +65,6 @@ const videoCount = posts.reduce((total, post) => total + post.data.videos.length
         <div class="mt-5 flex flex-wrap gap-x-5 gap-y-1 text-[0.72rem] text-muted">
           <span>{posts.length} {plural(posts.length, 'статья', 'статьи', 'статей')}</span>
           <span>{videoCount} {plural(videoCount, 'видео', 'видео', 'видео')}</span>
-          <a class="transition-colors hover:text-ink" href="/rss.xml">RSS</a>
         </div>
       </aside>
     </div>
@@ -123,7 +123,7 @@ const videoCount = posts.reduce((total, post) => total + post.data.videos.length
               <div class="mt-4 flex items-center gap-3 text-[0.72rem] uppercase tracking-wide text-muted">
                 <time datetime={post.data.date.toISOString()}>{dayMonth(post.data.date)}</time>
                 <span aria-hidden="true">·</span>
-                <span>{post.data.videos[0].platform === 'youtube' ? 'YouTube' : 'Rutube'}</span>
+                <span>{platformLabel(post.data.videos[0].platform)}</span>
               </div>
               <a class="mt-1.5 block font-serif text-xl leading-snug transition-colors hover:text-accent" href={postHref(post)}>
                 {post.data.title}
@@ -161,16 +161,16 @@ const videoCount = posts.reduce((total, post) => total + post.data.videos.length
   <section class="container-page pb-6">
     <div class="grid items-center gap-6 rounded-[1.6rem] border border-line bg-surface p-8 sm:p-10 md:grid-cols-[1fr_auto]">
       <div>
-        <p class="eyebrow">RSS</p>
-        <h2 class="mt-2 font-serif text-2xl font-medium tracking-[-0.01em]">Читать без алгоритмов</h2>
+        <p class="eyebrow">Связь</p>
+        <h2 class="mt-2 font-serif text-2xl font-medium tracking-[-0.01em]">Оставаться на связи</h2>
         <p class="mt-2 max-w-lg text-sm leading-relaxed text-muted">
-          Подпишитесь на ленту в любом RSS-ридере — новые статьи будут приходить целиком, без рекламы
-          и уведомлений.
+          Новые статьи и видеозаметки — в Telegram-канале проекта. Без алгоритмов, рекламы и лишних
+          уведомлений.
         </p>
       </div>
-      <a class="btn btn-primary w-fit" href="/rss.xml">
-        <Icon name="rss" size={16} />
-        RSS-лента
+      <a class="btn btn-primary w-fit" href={site.telegram} target="_blank" rel="noopener">
+        <Icon name="telegram" size={16} />
+        @FreeTUGA001
       </a>
     </div>
   </section>

@@ -4,6 +4,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import VideoEmbed from '../../components/VideoEmbed.astro';
 import YouTube from '../../components/mdx/YouTube.astro';
 import Rutube from '../../components/mdx/Rutube.astro';
+import Vk from '../../components/mdx/Vk.astro';
 import Video from '../../components/mdx/Video.astro';
 import Icon from '../../components/Icon.astro';
 import { getPosts, postMinutes, tagSlug, type Post } from '../../lib/posts';
@@ -21,7 +22,7 @@ interface Props {
 
 const { post } = Astro.props;
 const { Content } = await render(post);
-const { title, description, date, updated, cover, coverAlt, tags, videos, author } = post.data;
+const { title, description, date, updated, cover, coverAlt, tags, videos } = post.data;
 const minutes = postMinutes(post);
 
 const posts = await getPosts();
@@ -29,7 +30,7 @@ const index = posts.findIndex((item) => item.id === post.id);
 const newer = index > 0 ? posts[index - 1] : undefined;
 const older = index >= 0 && index < posts.length - 1 ? posts[index + 1] : undefined;
 
-const components = { YouTube, Rutube, Video };
+const components = { YouTube, Rutube, Vk, Video };
 ---
 
 <BaseLayout
@@ -64,11 +65,6 @@ const components = { YouTube, Rutube, Video };
       <p class="mt-4 max-w-2xl text-[1.05rem] leading-relaxed text-muted">{description}</p>
 
       <div class="mt-7 flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-line pt-5 text-xs text-muted">
-        <span class="grid h-8 w-8 place-items-center rounded-full bg-chip font-serif text-sm text-ink" aria-hidden="true">
-          {author.slice(0, 1)}
-        </span>
-        <span class="text-ink">{author}</span>
-        <span aria-hidden="true">·</span>
         <time datetime={date.toISOString()}>{fullDate(date)}</time>
         <span aria-hidden="true">·</span>
         <span>{minutes} мин чтения</span>
@@ -112,6 +108,7 @@ const components = { YouTube, Rutube, Video };
               platform={video.platform}
               id={video.id}
               title={video.title ?? title}
+              poster={video.poster}
             />
           ))}
         </div>
@@ -136,7 +133,7 @@ const components = { YouTube, Rutube, Video };
           class="text-xs text-muted transition-colors hover:text-ink"
           href={`mailto:${site.email}?subject=${encodeURIComponent(`Отклик на статью «${title}»`)}`}
         >
-          Написать автору
+          Обратная связь
         </a>
       </div>
     </footer>

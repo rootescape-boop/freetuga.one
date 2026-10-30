@@ -1,8 +1,10 @@
 {
   "title": "FreeTUGA001",
   "description": "Личный блог о технологиях, дизайне и жизни без спешки. Статьи, наблюдения и видеозаметки.",
-  "author": "Александр",
   "email": "hello@freetuga.one",
-  "github": "https://github.com/rootescape-boop",
+  "telegram": "https://t.me/FreeTUGA001",
+  "github": "https://github.com/rootescape-boop/freetuga.one",
+  "license": "Donationware",
+  "donationUrl": "",
   "startYear": 2026
 }

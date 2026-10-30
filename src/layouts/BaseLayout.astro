@@ -35,7 +35,6 @@ const pageTitle = title === site.title ? title : `${title} — ${site.title}`;
     />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="alternate" type="application/rss+xml" title={site.title} href="/rss.xml" />
     <meta name="theme-color" content="#faf8f4" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#100f0d" media="(prefers-color-scheme: dark)" />
     <meta name="generator" content={Astro.generator} />
@@ -84,6 +83,11 @@ const pageTitle = title === site.title ? title : `${title} — ${site.title}`;
               const match = url.pathname.match(/\/video\/([0-9a-f]{32})/i);
               return match ? { platform: 'rutube', id: match[1] } : null;
             }
+
+            if (host === 'vk.com' || host === 'm.vk.com' || host === 'vkvideo.ru') {
+              const match = url.pathname.match(/\/video(-?\d+)_(\d+)/);
+              return match ? { platform: 'vk', id: match[1] + '_' + match[2] } : null;
+            }
           } catch {}
           return null;
         }
@@ -120,7 +124,7 @@ const pageTitle = title === site.title ? title : `${title} — ${site.title}`;
 
           const badge = document.createElement('span');
           badge.className = 'video__badge';
-          badge.textContent = platform === 'youtube' ? 'YouTube' : 'Rutube';
+          badge.textContent = { youtube: 'YouTube', rutube: 'Rutube', vk: 'VK Видео' }[platform] || platform;
 
           const button = document.createElement('button');
           button.type = 'button';
@@ -134,7 +138,7 @@ const pageTitle = title === site.title ? title : `${title} — ${site.title}`;
           return box;
         }
 
-        // Turn a bare YouTube/Rutube link inside a paragraph into a lazy video player.
+        // Turn a bare YouTube/Rutube/VK link inside a paragraph into a lazy video player.
         document.querySelectorAll('.prose p').forEach((paragraph) => {
           const link = paragraph.querySelector('a[href]');
           if (!link) return;
@@ -154,12 +158,23 @@ const pageTitle = title === site.title ? title : `${title} — ${site.title}`;
 
           const { platform, id, title } = box.dataset;
           const iframe = document.createElement('iframe');
+          let src;
 
-          iframe.src =
-            platform === 'rutube'
-              ? 'https://rutube.ru/play/embed/' + id + '/?autoStart=true'
-              : 'https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0';
+          if (platform === 'rutube') {
+            src = 'https://rutube.ru/play/embed/' + id + '/?autoStart=true';
+          } else if (platform === 'vk') {
+            const [oid, videoId] = id.split('_');
+            src =
+              'https://vk.com/video_ext.php?oid=' +
+              encodeURIComponent(oid) +
+              '&id=' +
+              encodeURIComponent(videoId) +
+              '&hd=2&autoplay=1';
+          } else {
+            src = 'https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0';
+          }
 
+          iframe.src = src;
           iframe.title = title || 'Видео';
           iframe.loading = 'lazy';
           iframe.setAttribute(

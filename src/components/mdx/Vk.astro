@@ -1,0 +1,14 @@
+---
+import VideoEmbed from '../VideoEmbed.astro';
+
+interface Props {
+  id: string;
+  title?: string;
+  poster?: string;
+  class?: string;
+}
+
+const { id, title, poster, class: className } = Astro.props;
+---
+
+<VideoEmbed platform="vk" id={id} title={title} poster={poster} class={className} />

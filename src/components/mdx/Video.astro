@@ -1,14 +1,16 @@
 ---
 import VideoEmbed from '../VideoEmbed.astro';
+import type { VideoPlatform } from '../../lib/videos';
 
 interface Props {
-  platform: 'youtube' | 'rutube';
+  platform: VideoPlatform;
   id: string;
   title?: string;
+  poster?: string;
   class?: string;
 }
 
-const { platform, id, title, class: className } = Astro.props;
+const { platform, id, title, poster, class: className } = Astro.props;
 ---
 
-<VideoEmbed platform={platform} id={id} title={title} class={className} />
+<VideoEmbed platform={platform} id={id} title={title} poster={poster} class={className} />

@@ -1,0 +1,13 @@
+---
+import VideoEmbed from '../VideoEmbed.astro';
+
+interface Props {
+  id: string;
+  title?: string;
+  class?: string;
+}
+
+const { id, title, class: className } = Astro.props;
+---
+
+<VideoEmbed platform="rutube" id={id} title={title} class={className} />

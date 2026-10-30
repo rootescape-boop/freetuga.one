@@ -1,0 +1,83 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+  platform: 'youtube' | 'rutube';
+  id: string;
+  title?: string;
+  link?: string;
+  class?: string;
+}
+
+const { platform, id, title = 'Видео', link, class: className = '' } = Astro.props;
+
+const posterCache: Map<string, string | null> =
+  ((globalThis as { __posterCache?: Map<string, string | null> }).__posterCache ??= new Map());
+
+async function resolvePoster(): Promise<string | null> {
+  const key = `${platform}:${id}`;
+  if (posterCache.has(key)) return posterCache.get(key) ?? null;
+
+  let url: string | null = null;
+
+  if (platform === 'youtube') {
+    url = `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`;
+  } else {
+    try {
+      const response = await fetch(`https://rutube.ru/api/video/${id}/`, {
+        headers: { accept: 'application/json' },
+        signal: AbortSignal.timeout(5000),
+      });
+      if (response.ok) {
+        const data = (await response.json()) as { thumbnail_url?: string };
+        url = typeof data.thumbnail_url === 'string' ? data.thumbnail_url : null;
+      }
+    } catch {
+      url = null;
+    }
+  }
+
+  posterCache.set(key, url);
+  return url;
+}
+
+const poster = await resolvePoster();
+const platformLabel = platform === 'youtube' ? 'YouTube' : 'Rutube';
+const fallback = `this.onerror=null;this.src='https://i.ytimg.com/vi/${id}/hqdefault.jpg'`;
+---
+
+<div
+  class:list={['video', className]}
+  data-video={link ? undefined : ''}
+  data-platform={link ? undefined : platform}
+  data-id={link ? undefined : id}
+  data-title={link ? undefined : title}
+>
+  {poster ? (
+    <img
+      class="video__poster"
+      src={poster}
+      alt=""
+      loading="lazy"
+      decoding="async"
+      onerror={platform === 'youtube' ? fallback : undefined}
+    />
+  ) : (
+    <span class="video__poster video__poster--fallback" aria-hidden="true"></span>
+  )}
+
+  <span class="video__badge">
+    <Icon name="play" size={10} />
+    {platformLabel}
+  </span>
+
+  {link ? (
+    <a class="video__play" href={link} aria-label={`Открыть статью с видео: ${title}`}>
+      <span><Icon name="play" size={22} /></span>
+    </a>
+  ) : (
+    <button class="video__play" type="button" aria-label={`Смотреть видео: ${title}`}>
+      <span><Icon name="play" size={22} /></span>
+    </button>
+  )}
+</div>

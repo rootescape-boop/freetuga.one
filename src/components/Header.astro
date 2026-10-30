@@ -1,0 +1,83 @@
+---
+import { nav, site } from '../lib/site';
+import Icon from './Icon.astro';
+import ThemeToggle from './ThemeToggle.astro';
+
+const current = Astro.url.pathname.replace(/\/+$/, '') || '/';
+const isActive = (href: string) => current === href || current.startsWith(`${href}/`);
+---
+
+<header class="sticky top-0 z-50 border-b border-line/80 bg-paper/85 backdrop-blur-md">
+  <div class="container-page flex h-[68px] items-center justify-between gap-6">
+    <a href="/" class="flex items-baseline gap-2.5" aria-label={`${site.title} — на главную`}>
+      <span class="logo-dot" aria-hidden="true"></span>
+      <span class="font-serif text-[1.3rem] font-medium tracking-[-0.02em]">FreeTUGA001</span>
+    </a>
+
+    <nav class="hidden items-center gap-7 md:flex" aria-label="Основная навигация">
+      {nav.map((item) => (
+        <a class="nav-link" href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
+          {item.label}
+        </a>
+      ))}
+    </nav>
+
+    <div class="flex items-center gap-1.5">
+      <a
+        href="/search"
+        class="grid h-10 w-10 place-items-center rounded-full text-muted transition-colors hover:text-ink"
+        aria-label="Поиск по сайту"
+      >
+        <Icon name="search" size={18} />
+      </a>
+      <ThemeToggle />
+
+      <details class="mobile-menu md:hidden">
+        <summary
+          class="grid h-10 w-10 cursor-pointer place-items-center rounded-full border border-line text-muted"
+          aria-label="Открыть меню"
+        >
+          <Icon name="menu" size={18} />
+        </summary>
+        <div class="absolute right-4 top-[calc(100%+0.6rem)] w-60 rounded-2xl border border-line bg-surface p-2 shadow-[0_24px_60px_-24px_rgba(0,0,0,.35)]">
+          {nav.map((item) => (
+            <a
+              class="block rounded-xl px-3 py-2.5 text-[0.95rem] transition-colors hover:bg-chip"
+              href={item.href}
+            >
+              {item.label}
+            </a>
+          ))}
+          <a
+            class="mt-1 block rounded-xl border-t border-line px-3 py-2.5 text-[0.95rem] text-muted transition-colors hover:bg-chip hover:text-ink"
+            href="/search"
+          >
+            Поиск
+          </a>
+        </div>
+      </details>
+    </div>
+  </div>
+</header>
+
+<style>
+  .logo-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 999px;
+    background: var(--c-accent);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--c-accent) 14%, transparent);
+  }
+
+  .mobile-menu {
+    position: static;
+  }
+
+  .mobile-menu summary {
+    list-style: none;
+  }
+
+  .mobile-menu summary::-webkit-details-marker {
+    display: none;
+  }
+</style>

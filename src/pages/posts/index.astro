@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getPosts } from '../../lib/posts';
+import { plural } from '../../lib/format';
+
+const posts = await getPosts();
+---
+
+<BaseLayout title="Статьи" description="Все статьи блога FreeTUGA001: технологии, дизайн и заметки о жизни без спешки.">
+  <section class="container-page pt-14 sm:pt-20">
+    <p class="eyebrow">Архив</p>
+    <div class="mt-3 flex flex-wrap items-end justify-between gap-5 border-b border-line pb-6">
+      <h1 class="display text-[clamp(2.4rem,5vw,3.6rem)]">Статьи</h1>
+      <p class="text-sm text-muted">
+        {posts.length} {plural(posts.length, 'статья', 'статьи', 'статей')}
+        <span class="mx-2 opacity-50">·</span>
+        <a class="underline decoration-line underline-offset-4 hover:text-ink" href="/archive">по датам</a>
+        <span class="mx-2 opacity-50">·</span>
+        <a class="underline decoration-line underline-offset-4 hover:text-ink" href="/rss.xml">RSS</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="container-page py-10">
+    <div class="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+      {posts.map((post, index) => <PostCard post={post} eager={index < 3} />)}
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#faf8f4" />
+    <title>FreeTUGA001 — админка</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <style>
+      body {
+        background: #faf8f4;
+        color: #191712;
+        font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+      }
+
+      .admin-hint {
+        max-width: 34rem;
+        margin: 8vh auto 0;
+        padding: 0 1.5rem;
+        font-size: 0.85rem;
+        line-height: 1.6;
+        color: #6d675c;
+      }
+
+      .admin-hint a {
+        color: #bd3f1c;
+      }
+    </style>
+  </head>
+  <body data-pagefind-ignore>
+    <p class="admin-hint">
+      Вход в админку выполняется по токену GitHub. После входа можно создавать статьи, загружать
+      обложки и публиковать изменения — они попадут в репозиторий и сайт пересоберётся автоматически.
+      Токен создаётся на странице
+      <a href="https://github.com/settings/tokens?type=beta" rel="noopener" target="_blank">
+        GitHub → Fine-grained tokens
+      </a>
+      с доступом к репозиторию <code>rootescape-boop/freetuga.one</code> и правами
+      <code>Contents: Read and write</code>.
+    </p>
+
+    <script src="https://unpkg.com/@sveltia/cms@0.256.0/dist/sveltia-cms.js"></script>
+  </body>
+</html>

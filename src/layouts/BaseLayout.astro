@@ -1,0 +1,177 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Seo from '../components/Seo.astro';
+import { site } from '../lib/site';
+
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  type?: 'website' | 'article';
+  noindex?: boolean;
+  publishedTime?: Date;
+}
+
+const { title, description = site.description, image, type, noindex, publishedTime } = Astro.props;
+const pageTitle = title === site.title ? title : `${title} — ${site.title}`;
+---
+
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+
+    <Seo
+      title={title}
+      description={description}
+      image={image}
+      type={type}
+      noindex={noindex}
+      publishedTime={publishedTime}
+    />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate" type="application/rss+xml" title={site.title} href="/rss.xml" />
+    <meta name="theme-color" content="#faf8f4" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#100f0d" media="(prefers-color-scheme: dark)" />
+    <meta name="generator" content={Astro.generator} />
+
+    <script is:inline>
+      try {
+        if (localStorage.getItem('theme') === 'dark') {
+          document.documentElement.classList.add('dark');
+        }
+      } catch {}
+    </script>
+  </head>
+
+  <body id="top" class="flex min-h-dvh flex-col bg-paper text-ink">
+    <a class="skip-link" href="#main">К содержимому</a>
+    <Header />
+
+    <main id="main" class="flex-1" data-pagefind-body>
+      <slot />
+    </main>
+
+    <Footer />
+
+    <script is:inline>
+      (() => {
+        const YT_RE = /^[\w-]{11}$/;
+
+        function parseVideo(rawUrl) {
+          try {
+            const url = new URL(rawUrl, location.href);
+            const host = url.hostname.replace(/^www\./, '');
+
+            if (host === 'youtu.be') {
+              const id = url.pathname.slice(1).split('/')[0];
+              return YT_RE.test(id) ? { platform: 'youtube', id } : null;
+            }
+
+            if (host === 'youtube.com' || host === 'm.youtube.com' || host === 'music.youtube.com') {
+              const id = url.searchParams.get('v');
+              if (id && YT_RE.test(id)) return { platform: 'youtube', id };
+              const match = url.pathname.match(/\/(?:shorts|embed|live)\/([\w-]{11})/);
+              return match ? { platform: 'youtube', id: match[1] } : null;
+            }
+
+            if (host === 'rutube.ru') {
+              const match = url.pathname.match(/\/video\/([0-9a-f]{32})/i);
+              return match ? { platform: 'rutube', id: match[1] } : null;
+            }
+          } catch {}
+          return null;
+        }
+
+        const PLAY_SVG =
+          '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5-11-6.5Z"/></svg>';
+
+        function buildFacade(platform, id, title) {
+          const box = document.createElement('div');
+          box.className = 'video';
+          box.dataset.video = '';
+          box.dataset.platform = platform;
+          box.dataset.id = id;
+          box.dataset.title = title;
+
+          if (platform === 'youtube') {
+            const img = new Image();
+            img.className = 'video__poster';
+            img.alt = '';
+            img.loading = 'lazy';
+            img.decoding = 'async';
+            img.src = 'https://i.ytimg.com/vi/' + id + '/maxresdefault.jpg';
+            img.onerror = () => {
+              img.onerror = null;
+              img.src = 'https://i.ytimg.com/vi/' + id + '/hqdefault.jpg';
+            };
+            box.append(img);
+          } else {
+            const poster = document.createElement('span');
+            poster.className = 'video__poster video__poster--fallback';
+            poster.setAttribute('aria-hidden', 'true');
+            box.append(poster);
+          }
+
+          const badge = document.createElement('span');
+          badge.className = 'video__badge';
+          badge.textContent = platform === 'youtube' ? 'YouTube' : 'Rutube';
+
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'video__play';
+          button.setAttribute('aria-label', 'Смотреть видео: ' + title);
+          const icon = document.createElement('span');
+          icon.innerHTML = PLAY_SVG;
+          button.append(icon);
+
+          box.append(badge, button);
+          return box;
+        }
+
+        // Turn a bare YouTube/Rutube link inside a paragraph into a lazy video player.
+        document.querySelectorAll('.prose p').forEach((paragraph) => {
+          const link = paragraph.querySelector('a[href]');
+          if (!link) return;
+          if (paragraph.textContent.trim() !== link.textContent.trim()) return;
+          const video = parseVideo(link.href);
+          if (!video) return;
+          paragraph.replaceWith(buildFacade(video.platform, video.id, link.textContent.trim()));
+        });
+
+        // Load the player only after a click.
+        document.addEventListener('click', (event) => {
+          const button = event.target.closest('[data-video] .video__play');
+          if (!button || button.tagName === 'A') return;
+
+          const box = button.closest('[data-video]');
+          if (!box) return;
+
+          const { platform, id, title } = box.dataset;
+          const iframe = document.createElement('iframe');
+
+          iframe.src =
+            platform === 'rutube'
+              ? 'https://rutube.ru/play/embed/' + id + '/?autoStart=true'
+              : 'https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0';
+
+          iframe.title = title || 'Видео';
+          iframe.loading = 'lazy';
+          iframe.setAttribute(
+            'allow',
+            'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share',
+          );
+          iframe.setAttribute('allowfullscreen', '');
+
+          box.replaceChildren(iframe);
+          box.removeAttribute('data-video');
+        });
+      })();
+    </script>
+  </body>
+</html>

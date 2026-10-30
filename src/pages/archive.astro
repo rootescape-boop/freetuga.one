@@ -1,0 +1,53 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getPosts, postHref, postMinutes, type Post } from '../lib/posts';
+import { fullDate } from '../lib/format';
+
+const posts = await getPosts();
+
+const byYear = new Map<number, Post[]>();
+for (const post of posts) {
+  const year = post.data.date.getFullYear();
+  const list = byYear.get(year) ?? [];
+  list.push(post);
+  byYear.set(year, list);
+}
+const years = [...byYear.entries()].sort((a, b) => b[0] - a[0]);
+---
+
+<BaseLayout title="Архив" description="Все статьи FreeTUGA001 по годам.">
+  <section class="container-page pt-14 sm:pt-20">
+    <p class="eyebrow">Хронология</p>
+    <h1 class="display mt-3 text-[clamp(2.4rem,5vw,3.6rem)]">Архив</h1>
+    <p class="mt-4 max-w-xl text-[1.02rem] leading-relaxed text-muted">
+      Все публикации по датам — от новых к старым.
+    </p>
+  </section>
+
+  <section class="container-page py-10">
+    {years.map(([year, list]) => (
+      <div class="mb-12 last:mb-0">
+        <div class="flex items-baseline gap-4 border-b border-line pb-3">
+          <h2 class="font-serif text-3xl font-medium tracking-[-0.02em]">{year}</h2>
+          <span class="text-xs text-muted">{list.length}</span>
+        </div>
+
+        <ul>
+          {list.map((post) => (
+            <li>
+              <a class="group grid grid-cols-[auto_1fr] items-baseline gap-x-4 gap-y-1 border-b border-line py-4 sm:grid-cols-[7rem_1fr_auto]" href={postHref(post)}>
+                <time class="text-xs text-muted" datetime={post.data.date.toISOString()}>
+                  {fullDate(post.data.date)}
+                </time>
+                <span class="font-serif text-lg leading-snug transition-colors group-hover:text-accent">
+                  {post.data.title}
+                </span>
+                <span class="col-span-2 text-xs text-muted sm:col-span-1">{postMinutes(post)} мин</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))}
+  </section>
+</BaseLayout>

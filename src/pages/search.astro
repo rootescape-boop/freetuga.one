@@ -1,0 +1,102 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Поиск" description="Поиск по статьям FreeTUGA001.">
+  <section class="container-narrow pt-14 sm:pt-20">
+    <p class="eyebrow">Поиск</p>
+    <h1 class="display mt-3 text-[clamp(2.4rem,5vw,3.6rem)]">Найти в блоге</h1>
+
+    <div class="mt-8">
+      <label class="sr-only" for="q">Поисковый запрос</label>
+      <input
+        id="q"
+        class="search-input"
+        type="search"
+        placeholder="Например: Astro, типографика, видео"
+        autocomplete="off"
+        spellcheck="false"
+        autofocus
+      />
+      <p id="hint" class="mt-3 min-h-[1.2rem] text-xs text-muted">
+        Начните вводить запрос — результаты появятся сразу.
+      </p>
+    </div>
+
+    <div id="results" class="mt-6" aria-live="polite"></div>
+  </section>
+</BaseLayout>
+
+<script>
+  type PagefindResult = {
+    data: () => Promise<{ url: string; excerpt: string; meta: Record<string, string> }>;
+  };
+
+  const input = document.getElementById('q') as HTMLInputElement | null;
+  const hint = document.getElementById('hint');
+  const results = document.getElementById('results');
+
+  if (input && hint && results) {
+    let pagefind: {
+      search: (query: string) => Promise<{ results: PagefindResult[] }>;
+    } | null = null;
+
+    let timer: number | undefined;
+
+    const render = async (query: string) => {
+      if (!pagefind) return;
+
+      if (!query.trim()) {
+        results.innerHTML = '';
+        hint.textContent = 'Начните вводить запрос — результаты появятся сразу.';
+        return;
+      }
+
+      const found = await pagefind.search(query.trim());
+      const items = await Promise.all(found.results.slice(0, 12).map((item) => item.data()));
+
+      if (items.length === 0) {
+        results.innerHTML = '';
+        hint.textContent = 'Ничего не нашлось. Попробуйте другой запрос.';
+        return;
+      }
+
+      hint.textContent = `Найдено: ${found.results.length}`;
+      results.innerHTML = items
+        .map((item) => {
+          const title = item.meta?.title ?? item.url;
+          return `<a class="search-result" href="${item.url}">
+            <span class="search-result__title font-serif text-xl leading-snug">${title}</span>
+            <p class="mt-1.5 text-sm leading-relaxed text-muted">${item.excerpt}</p>
+          </a>`;
+        })
+        .join('');
+    };
+
+    const onChange = () => {
+      window.clearTimeout(timer);
+      const value = input.value;
+      timer = window.setTimeout(() => {
+        void render(value);
+      }, 160);
+    };
+
+    input.addEventListener('input', onChange);
+
+    (async () => {
+      if (!import.meta.env.PROD) {
+        hint.textContent =
+          'Поиск работает на собранном сайте: выполните npm run build и npm run preview.';
+        input.disabled = true;
+        return;
+      }
+
+      try {
+        pagefind = (await import(/* @vite-ignore */ '/pagefind/pagefind.js')) as typeof pagefind;
+        hint.textContent = 'Начните вводить запрос — результаты появятся сразу.';
+      } catch {
+        hint.textContent = 'Поиск временно недоступен. Попробуйте обновить страницу.';
+      }
+    })();
+  }
+</script>

@@ -1,0 +1,81 @@
+---
+import { nav, site } from '../lib/site';
+import Icon from './Icon.astro';
+
+const year = new Date().getFullYear();
+const start = site.startYear;
+const years = year > start ? `${start}–${year}` : `${year}`;
+---
+
+<footer class="mt-20 border-t border-line bg-surface/40">
+  <div class="container-page py-14">
+    <div class="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr]">
+      <div>
+        <a href="/" class="font-serif text-[2.4rem] font-medium leading-none tracking-[-0.03em]">
+          FreeTUGA001<span class="text-accent">.</span>
+        </a>
+        <p class="mt-4 max-w-xs text-sm leading-relaxed text-muted">{site.description}</p>
+      </div>
+
+      <nav aria-label="Разделы сайта">
+        <p class="eyebrow">Разделы</p>
+        <ul class="mt-4 space-y-2.5 text-sm">
+          {nav.map((item) => (
+            <li>
+              <a class="text-muted transition-colors hover:text-ink" href={item.href}>{item.label}</a>
+            </li>
+          ))}
+          <li>
+            <a class="text-muted transition-colors hover:text-ink" href="/archive">Архив</a>
+          </li>
+        </ul>
+      </nav>
+
+      <div>
+        <p class="eyebrow">Ещё</p>
+        <ul class="mt-4 space-y-2.5 text-sm">
+          <li>
+            <a class="inline-flex items-center gap-2 text-muted transition-colors hover:text-ink" href="/rss.xml">
+              <Icon name="rss" size={15} /> RSS
+            </a>
+          </li>
+          <li>
+            <a
+              class="inline-flex items-center gap-2 text-muted transition-colors hover:text-ink"
+              href={site.github}
+              rel="noopener"
+              target="_blank"
+            >
+              <Icon name="github" size={15} /> GitHub
+            </a>
+          </li>
+          <li>
+            <a
+              class="inline-flex items-center gap-2 text-muted transition-colors hover:text-ink"
+              href={`mailto:${site.email}`}
+            >
+              <Icon name="mail" size={15} /> Почта
+            </a>
+          </li>
+          <li>
+            <a class="inline-flex items-center gap-2 text-muted transition-colors hover:text-ink" href="/admin/">
+              Админка
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div
+      class="mt-12 flex flex-col-reverse items-start justify-between gap-3 border-t border-line pt-6 text-xs text-muted sm:flex-row sm:items-center"
+    >
+      <p>© {years} {site.title}. Автор — {site.author}.</p>
+      <p class="flex items-center gap-5">
+        <span>Сделано на Astro · GitHub Pages</span>
+        <a class="inline-flex items-center gap-1 transition-colors hover:text-ink" href="#top">
+          Наверх <Icon name="chevron-up" size={13} />
+        </a>
+      </p>
+    </div>
+  </div>
+</footer>

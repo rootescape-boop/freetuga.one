@@ -1,0 +1,177 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostCard from '../components/PostCard.astro';
+import FeaturedPost from '../components/FeaturedPost.astro';
+import VideoEmbed from '../components/VideoEmbed.astro';
+import Icon from '../components/Icon.astro';
+import { collectTags, getPosts, postHref } from '../lib/posts';
+import { dayMonth, plural } from '../lib/format';
+import { site } from '../lib/site';
+
+const posts = await getPosts();
+const featured = posts.find((post) => post.data.featured) ?? posts[0];
+const rest = posts.filter((post) => post.id !== featured?.id).slice(0, 6);
+const videoPosts = posts.filter((post) => post.data.videos.length > 0).slice(0, 2);
+const tags = collectTags(posts).slice(0, 9);
+const videoCount = posts.reduce((total, post) => total + post.data.videos.length, 0);
+---
+
+<BaseLayout title={site.title}>
+  <section class="container-page pt-14 sm:pt-20">
+    <div class="grid gap-12 lg:grid-cols-[1.4fr_0.6fr] lg:items-end">
+      <div class="rise">
+        <p class="eyebrow flex items-center gap-3">
+          <span class="inline-block h-px w-8 bg-accent"></span>
+          Личный блог · с {site.startYear}
+        </p>
+
+        <h1 class="display mt-6 max-w-[17ch] text-[clamp(2.6rem,6.4vw,4.9rem)]">
+          Тексты о технологиях, дизайне и жизни без спешки.
+        </h1>
+
+        <p class="mt-6 max-w-xl text-[1.05rem] leading-relaxed text-muted">
+          Статьи, наблюдения и видеозаметки. Без алгоритмов, уведомлений и гонки за охватами — просто
+          место, куда хочется возвращаться.
+        </p>
+
+        <div class="mt-8 flex flex-wrap items-center gap-3">
+          <a class="btn btn-primary" href="/posts">
+            Читать статьи
+            <Icon name="arrow-right" size={16} />
+          </a>
+          <a class="btn btn-ghost" href="/videos">Смотреть видео</a>
+        </div>
+      </div>
+
+      <aside class="rise rise-2 border-t border-line pt-6 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-1">
+        <p class="eyebrow">Последнее</p>
+        <ul class="mt-3 divide-y divide-line">
+          {posts.slice(0, 3).map((post) => (
+            <li>
+              <a class="group flex items-baseline gap-4 py-3.5" href={postHref(post)}>
+                <time class="w-12 shrink-0 text-[0.7rem] uppercase tracking-wide text-muted" datetime={post.data.date.toISOString()}>
+                  {dayMonth(post.data.date)}
+                </time>
+                <span class="flex-1 text-[0.92rem] leading-snug transition-colors group-hover:text-accent">
+                  {post.data.title}
+                </span>
+                <Icon name="arrow-up-right" size={13} class="mt-1 shrink-0 text-muted" />
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        <div class="mt-5 flex flex-wrap gap-x-5 gap-y-1 text-[0.72rem] text-muted">
+          <span>{posts.length} {plural(posts.length, 'статья', 'статьи', 'статей')}</span>
+          <span>{videoCount} {plural(videoCount, 'видео', 'видео', 'видео')}</span>
+          <a class="transition-colors hover:text-ink" href="/rss.xml">RSS</a>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  {featured && (
+    <section class="container-page pt-14 sm:pt-20">
+      <FeaturedPost post={featured} />
+    </section>
+  )}
+
+  <section class="container-page pt-16 sm:pt-20">
+    <div class="flex items-end justify-between gap-6 border-b border-line pb-5">
+      <div>
+        <p class="eyebrow">Свежее</p>
+        <h2 class="mt-2 font-serif text-[1.9rem] font-medium tracking-[-0.02em] sm:text-[2.2rem]">
+          Новые статьи
+        </h2>
+      </div>
+      <a class="group inline-flex items-center gap-1.5 text-sm text-muted transition-colors hover:text-ink" href="/posts">
+        Все статьи
+        <Icon name="arrow-right" size={15} class="transition-transform group-hover:translate-x-0.5" />
+      </a>
+    </div>
+
+    <div class="mt-8 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+      {rest.map((post, index) => <PostCard post={post} eager={index < 2} />)}
+    </div>
+  </section>
+
+  {videoPosts.length > 0 && (
+    <section class="mt-16 border-y border-line bg-surface/60 sm:mt-20">
+      <div class="container-page py-14">
+        <div class="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p class="eyebrow">Видео</p>
+            <h2 class="mt-2 font-serif text-[1.9rem] font-medium tracking-[-0.02em] sm:text-[2.2rem]">
+              Смотреть
+            </h2>
+          </div>
+          <a class="group inline-flex items-center gap-1.5 text-sm text-muted transition-colors hover:text-ink" href="/videos">
+            Все видео
+            <Icon name="arrow-right" size={15} class="transition-transform group-hover:translate-x-0.5" />
+          </a>
+        </div>
+
+        <div class="mt-8 grid gap-6 md:grid-cols-2">
+          {videoPosts.map((post) => (
+            <article>
+              <VideoEmbed
+                platform={post.data.videos[0].platform}
+                id={post.data.videos[0].id}
+                title={post.data.videos[0].title ?? post.data.title}
+                link={postHref(post)}
+              />
+              <div class="mt-4 flex items-center gap-3 text-[0.72rem] uppercase tracking-wide text-muted">
+                <time datetime={post.data.date.toISOString()}>{dayMonth(post.data.date)}</time>
+                <span aria-hidden="true">·</span>
+                <span>{post.data.videos[0].platform === 'youtube' ? 'YouTube' : 'Rutube'}</span>
+              </div>
+              <a class="mt-1.5 block font-serif text-xl leading-snug transition-colors hover:text-accent" href={postHref(post)}>
+                {post.data.title}
+              </a>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  {tags.length > 0 && (
+    <section class="container-page py-14">
+      <div class="flex items-end justify-between gap-6">
+        <div>
+          <p class="eyebrow">Темы</p>
+          <h2 class="mt-2 font-serif text-[1.9rem] font-medium tracking-[-0.02em] sm:text-[2.2rem]">
+            О чём здесь пишут
+          </h2>
+        </div>
+        <a class="text-sm text-muted transition-colors hover:text-ink" href="/tags">Все теги</a>
+      </div>
+
+      <div class="mt-6 flex flex-wrap gap-2">
+        {tags.map((tag) => (
+          <a class="tag tag--lg" href={`/tags/${tag.slug}`}>
+            {tag.name}
+            <span class="ml-1.5 opacity-60">{tag.count}</span>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <section class="container-page pb-6">
+    <div class="grid items-center gap-6 rounded-[1.6rem] border border-line bg-surface p-8 sm:p-10 md:grid-cols-[1fr_auto]">
+      <div>
+        <p class="eyebrow">RSS</p>
+        <h2 class="mt-2 font-serif text-2xl font-medium tracking-[-0.01em]">Читать без алгоритмов</h2>
+        <p class="mt-2 max-w-lg text-sm leading-relaxed text-muted">
+          Подпишитесь на ленту в любом RSS-ридере — новые статьи будут приходить целиком, без рекламы
+          и уведомлений.
+        </p>
+      </div>
+      <a class="btn btn-primary w-fit" href="/rss.xml">
+        <Icon name="rss" size={16} />
+        RSS-лента
+      </a>
+    </div>
+  </section>
+</BaseLayout>

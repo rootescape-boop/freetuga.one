@@ -1,0 +1,150 @@
+# yaml-language-server: $schema=https://unpkg.com/@sveltia/cms/schema/sveltia-cms.json
+
+backend:
+  name: github
+  repo: rootescape-boop/freetuga.one
+  branch: main
+
+site_url: https://freetuga.one
+display_url: https://freetuga.one
+logo:
+  src: /favicon.svg
+
+media_folder: public/uploads
+public_folder: /uploads
+
+slug:
+  encoding: unicode
+  clean_accents: true
+  lowercase: true
+
+collections:
+  - name: posts
+    label: Статьи
+    label_singular: Статья
+    folder: src/content/posts
+    extension: mdx
+    format: frontmatter
+    create: true
+    delete: true
+    identifier_field: title
+    slug: "{{fields.slug}}"
+    preview_path: "posts/{{fields.slug}}"
+    summary: "{{title}} — {{date | date('DD.MM.YYYY')}}"
+    sortable_fields: [date, title]
+    fields:
+      - name: title
+        label: Заголовок
+        widget: string
+      - name: slug
+        label: Адрес статьи
+        widget: string
+        hint: "Латиницей, через дефис: naprimer-tak. Именно этот адрес попадёт в ссылку."
+      - name: description
+        label: Краткое описание
+        widget: text
+        hint: "Одно-два предложения для карточки и поисковиков."
+      - name: date
+        label: Дата
+        widget: datetime
+        date_format: "YYYY-MM-DD"
+        time_format: false
+        picker_utc: true
+      - name: cover
+        label: Обложка
+        widget: image
+        required: false
+        hint: "Идеально — 1600×1000 px. Можно оставить пустым."
+      - name: coverAlt
+        label: Описание обложки
+        widget: string
+        required: false
+        hint: "Для незрячих читателей и поисковиков."
+      - name: tags
+        label: Теги
+        widget: list
+        required: false
+        default: []
+        hint: "Каждый тег — отдельный элемент списка."
+      - name: videos
+        label: Видео
+        widget: list
+        required: false
+        summary: "{{fields.platform}} · {{fields.id}}"
+        hint: "Ролики появятся над текстом статьи и загрузятся только по клику."
+        fields:
+          - name: platform
+            label: Платформа
+            widget: select
+            options:
+              - { label: YouTube, value: youtube }
+              - { label: Rutube, value: rutube }
+          - name: id
+            label: ID видео
+            widget: string
+            hint: "YouTube: из watch?v=ID или youtu.be/ID. Rutube: 32 символа из rutube.ru/video/ID/"
+          - name: title
+            label: Подпись
+            widget: string
+            required: false
+      - name: featured
+        label: Показывать на главной
+        widget: boolean
+        default: false
+        hint: "Избранная статья занимает большой блок на главной странице."
+      - name: draft
+        label: Черновик
+        widget: boolean
+        default: false
+        hint: "Черновики не попадают на сайт, но остаются в репозитории."
+      - name: body
+        label: Текст статьи
+        widget: markdown
+
+  - name: pages
+    label: Страницы
+    files:
+      - name: about
+        label: О сайте
+        file: src/content/pages/about.mdx
+        fields:
+          - name: title
+            label: Заголовок
+            widget: string
+          - name: description
+            label: Описание
+            widget: text
+            required: false
+          - name: body
+            label: Текст
+            widget: markdown
+
+  - name: settings
+    label: Настройки
+    files:
+      - name: site
+        label: Сайт
+        file: src/data/site.json
+        format: json
+        fields:
+          - name: title
+            label: Название сайта
+            widget: string
+          - name: description
+            label: Описание
+            widget: text
+          - name: author
+            label: Автор
+            widget: string
+          - name: email
+            label: Почта
+            widget: string
+          - name: github
+            label: Ссылка на GitHub
+            widget: string
+          - name: startYear
+            label: Год основания
+            widget: number
+            value_type: int
+            min: 2000
+            max: 2100

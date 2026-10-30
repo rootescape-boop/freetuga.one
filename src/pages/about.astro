@@ -1,0 +1,50 @@
+---
+import { getEntry, render } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import { site } from '../lib/site';
+
+const entry = await getEntry('pages', 'about');
+if (!entry) throw new Error('Страница «О сайте» не найдена: src/content/pages/about.mdx');
+const { Content } = await render(entry);
+---
+
+<BaseLayout title={entry.data.title} description={entry.data.description}>
+  <section class="container-narrow pt-14 sm:pt-20">
+    <p class="eyebrow">О блоге</p>
+    <h1 class="display mt-3 text-[clamp(2.4rem,5vw,3.6rem)]">{entry.data.title}</h1>
+    {entry.data.description && (
+      <p class="mt-4 text-[1.05rem] leading-relaxed text-muted">{entry.data.description}</p>
+    )}
+  </section>
+
+  <section class="container-narrow mt-10">
+    <div class="prose">
+      <Content />
+    </div>
+  </section>
+
+  <section class="container-narrow mt-12 pb-4">
+    <div class="grid gap-4 rounded-[1.4rem] border border-line bg-surface p-6 sm:grid-cols-2 sm:p-7">
+      <a class="group flex items-center gap-3" href={`mailto:${site.email}`}>
+        <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-chip text-muted">
+          <Icon name="mail" size={17} />
+        </span>
+        <span>
+          <span class="block text-xs text-muted">Почта</span>
+          <span class="text-sm transition-colors group-hover:text-accent">{site.email}</span>
+        </span>
+      </a>
+
+      <a class="group flex items-center gap-3" href={site.github} target="_blank" rel="noopener">
+        <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-chip text-muted">
+          <Icon name="github" size={17} />
+        </span>
+        <span>
+          <span class="block text-xs text-muted">GitHub</span>
+          <span class="text-sm transition-colors group-hover:text-accent">{site.github.replace('https://github.com/', '@')}</span>
+        </span>
+      </a>
+    </div>
+  </section>
+</BaseLayout>

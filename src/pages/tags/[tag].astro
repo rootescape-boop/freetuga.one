@@ -1,0 +1,43 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+import Icon from '../../components/Icon.astro';
+import { collectTags, getPosts, type Post } from '../../lib/posts';
+import { plural } from '../../lib/format';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  const tags = collectTags(posts);
+  return tags.map((tag) => ({ params: { tag: tag.slug }, props: { tag } }));
+}
+
+interface Props {
+  tag: { name: string; count: number; slug: string };
+}
+
+const { tag } = Astro.props;
+const posts = (await getPosts()).filter((post) => post.data.tags.includes(tag.name));
+---
+
+<BaseLayout title={`Тег: ${tag.name}`} description={`Статьи по теме «${tag.name}» в блоге FreeTUGA001.`}>
+  <section class="container-page pt-14 sm:pt-20">
+    <a class="inline-flex items-center gap-1.5 text-xs text-muted transition-colors hover:text-ink" href="/tags">
+      <Icon name="arrow-left" size={14} />
+      Все теги
+    </a>
+
+    <p class="eyebrow mt-6">Тег</p>
+    <div class="mt-3 flex flex-wrap items-end justify-between gap-4 border-b border-line pb-6">
+      <h1 class="display text-[clamp(2.2rem,5vw,3.4rem)]">{tag.name}</h1>
+      <p class="text-sm text-muted">
+        {posts.length} {plural(posts.length, 'статья', 'статьи', 'статей')}
+      </p>
+    </div>
+  </section>
+
+  <section class="container-page py-10">
+    <div class="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+      {posts.map((post: Post, index: number) => <PostCard post={post} eager={index < 3} />)}
+    </div>
+  </section>
+</BaseLayout>

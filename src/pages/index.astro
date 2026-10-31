@@ -23,21 +23,21 @@ const videoCount = posts.reduce((total, post) => total + post.data.videos.length
       <div class="rise">
         <p class="eyebrow flex items-center gap-3">
           <span class="inline-block h-px w-8 bg-accent"></span>
-          Личный блог · с {site.startYear}
+          База знаний · с {site.startYear}
         </p>
 
         <h1 class="display mt-6 max-w-[17ch] text-[clamp(2.6rem,6.4vw,4.9rem)]">
-          Тексты о технологиях, дизайне и жизни без спешки.
+          Документация, разборы и видео по проекту.
         </h1>
 
         <p class="mt-6 max-w-xl text-[1.05rem] leading-relaxed text-muted">
-          Статьи, наблюдения и видеозаметки. Без алгоритмов, уведомлений и гонки за охватами — просто
-          место, куда хочется возвращаться.
+          Открытая база знаний FreeTUGA001: устройство проекта, технические решения и инструкции.
+          Материалы доступны по модели Donationware — без подписок и платного доступа.
         </p>
 
         <div class="mt-8 flex flex-wrap items-center gap-3">
-          <a class="btn btn-primary" href="/posts">
-            Читать статьи
+          <a class="btn btn-primary" href="/materials">
+            Открыть материалы
             <Icon name="arrow-right" size={16} />
           </a>
           <a class="btn btn-ghost" href="/videos">Смотреть видео</a>
@@ -45,7 +45,7 @@ const videoCount = posts.reduce((total, post) => total + post.data.videos.length
       </div>
 
       <aside class="rise rise-2 border-t border-line pt-6 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-1">
-        <p class="eyebrow">Последнее</p>
+        <p class="eyebrow">Недавнее</p>
         <ul class="mt-3 divide-y divide-line">
           {posts.slice(0, 3).map((post) => (
             <li>
@@ -63,7 +63,7 @@ const videoCount = posts.reduce((total, post) => total + post.data.videos.length
         </ul>
 
         <div class="mt-5 flex flex-wrap gap-x-5 gap-y-1 text-[0.72rem] text-muted">
-          <span>{posts.length} {plural(posts.length, 'статья', 'статьи', 'статей')}</span>
+          <span>{posts.length} {plural(posts.length, 'материал', 'материала', 'материалов')}</span>
           <span>{videoCount} {plural(videoCount, 'видео', 'видео', 'видео')}</span>
         </div>
       </aside>
@@ -79,13 +79,13 @@ const videoCount = posts.reduce((total, post) => total + post.data.videos.length
   <section class="container-page pt-16 sm:pt-20">
     <div class="flex items-end justify-between gap-6 border-b border-line pb-5">
       <div>
-        <p class="eyebrow">Свежее</p>
+        <p class="eyebrow">Пополнения</p>
         <h2 class="mt-2 font-serif text-[1.9rem] font-medium tracking-[-0.02em] sm:text-[2.2rem]">
-          Новые статьи
+          Новые материалы
         </h2>
       </div>
-      <a class="group inline-flex items-center gap-1.5 text-sm text-muted transition-colors hover:text-ink" href="/posts">
-        Все статьи
+      <a class="group inline-flex items-center gap-1.5 text-sm text-muted transition-colors hover:text-ink" href="/materials">
+        Все материалы
         <Icon name="arrow-right" size={15} class="transition-transform group-hover:translate-x-0.5" />
       </a>
     </div>
@@ -139,9 +139,9 @@ const videoCount = posts.reduce((total, post) => total + post.data.videos.length
     <section class="container-page py-14">
       <div class="flex items-end justify-between gap-6">
         <div>
-          <p class="eyebrow">Темы</p>
+          <p class="eyebrow">Разделы</p>
           <h2 class="mt-2 font-serif text-[1.9rem] font-medium tracking-[-0.02em] sm:text-[2.2rem]">
-            О чём здесь пишут
+            Темы базы знаний
           </h2>
         </div>
         <a class="text-sm text-muted transition-colors hover:text-ink" href="/tags">Все теги</a>
@@ -162,10 +162,10 @@ const videoCount = posts.reduce((total, post) => total + post.data.videos.length
     <div class="grid items-center gap-6 rounded-[1.6rem] border border-line bg-surface p-8 sm:p-10 md:grid-cols-[1fr_auto]">
       <div>
         <p class="eyebrow">Связь</p>
-        <h2 class="mt-2 font-serif text-2xl font-medium tracking-[-0.01em]">Оставаться на связи</h2>
+        <h2 class="mt-2 font-serif text-2xl font-medium tracking-[-0.01em]">Обсуждение проекта</h2>
         <p class="mt-2 max-w-lg text-sm leading-relaxed text-muted">
-          Новые статьи и видеозаметки — в Telegram-канале проекта. Без алгоритмов, рекламы и лишних
-          уведомлений.
+          Новые материалы, вопросы и обсуждение — в Telegram-канале проекта. Там же можно предложить
+          тему для базы знаний.
         </p>
       </div>
       <a class="btn btn-primary w-fit" href={site.telegram} target="_blank" rel="noopener">

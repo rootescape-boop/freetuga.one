@@ -46,10 +46,10 @@ const components = { YouTube, Rutube, Vk, Video };
     <header class="container-narrow pt-12 sm:pt-16">
       <a
         class="inline-flex items-center gap-1.5 text-xs text-muted transition-colors hover:text-ink"
-        href="/posts"
+        href="/materials"
       >
         <Icon name="arrow-left" size={14} />
-        Все статьи
+        Все материалы
       </a>
 
       {tags.length > 0 && (
@@ -130,22 +130,25 @@ const components = { YouTube, Rutube, Vk, Video };
           ))}
         </div>
         <a
-          class="text-xs text-muted transition-colors hover:text-ink"
-          href={`mailto:${site.email}?subject=${encodeURIComponent(`Отклик на статью «${title}»`)}`}
+          class="inline-flex items-center gap-1.5 text-xs text-muted transition-colors hover:text-ink"
+          href={site.telegram}
+          rel="noopener"
+          target="_blank"
         >
-          Обратная связь
+          <Icon name="telegram" size={13} />
+          Обсудить в Telegram
         </a>
       </div>
     </footer>
   </article>
 
   {(newer || older) && (
-    <nav class="container-page border-t border-line py-10" aria-label="Другие статьи">
+    <nav class="container-page border-t border-line py-10" aria-label="Другие материалы">
       <div class="grid gap-4 sm:grid-cols-2">
         {newer ? (
           <a
             class="group rounded-2xl border border-line p-5 transition-colors hover:border-ink/40"
-            href={`/posts/${newer.id}`}
+            href={`/materials/${newer.id}`}
           >
             <span class="flex items-center gap-1.5 text-[0.7rem] uppercase tracking-wide text-muted">
               <Icon name="arrow-left" size={12} /> Новее
@@ -161,7 +164,7 @@ const components = { YouTube, Rutube, Vk, Video };
         {older && (
           <a
             class="group rounded-2xl border border-line p-5 text-right transition-colors hover:border-ink/40"
-            href={`/posts/${older.id}`}
+            href={`/materials/${older.id}`}
           >
             <span class="flex items-center justify-end gap-1.5 text-[0.7rem] uppercase tracking-wide text-muted">
               Раньше <Icon name="arrow-right" size={12} />

@@ -9,9 +9,14 @@ const isActive = (href: string) => current === href || current.startsWith(`${hre
 
 <header class="sticky top-0 z-50 border-b border-line/80 bg-paper/85 backdrop-blur-md">
   <div class="container-page flex h-[68px] items-center justify-between gap-6">
-    <a href="/" class="flex items-baseline gap-2.5" aria-label={`${site.title} — на главную`}>
-      <span class="logo-dot" aria-hidden="true"></span>
-      <span class="font-serif text-[1.3rem] font-medium tracking-[-0.02em]">FreeTUGA001</span>
+    <a href="/" class="flex items-center" aria-label={`${site.title} — на главную`}>
+      <img
+        src="/logo.jpg"
+        alt="FreeTUGA001"
+        width="40"
+        height="40"
+        class="h-10 w-10 rounded-[0.7rem] object-cover"
+      />
     </a>
 
     <nav class="hidden items-center gap-7 md:flex" aria-label="Основная навигация">
@@ -61,14 +66,6 @@ const isActive = (href: string) => current === href || current.startsWith(`${hre
 </header>
 
 <style>
-  .logo-dot {
-    width: 0.5rem;
-    height: 0.5rem;
-    border-radius: 999px;
-    background: var(--c-accent);
-    box-shadow: 0 0 0 4px color-mix(in srgb, var(--c-accent) 14%, transparent);
-  }
-
   .mobile-menu {
     position: static;
   }

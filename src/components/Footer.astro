@@ -11,8 +11,14 @@ const years = year > start ? `${start}–${year}` : `${year}`;
   <div class="container-page py-14">
     <div class="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr]">
       <div>
-        <a href="/" class="font-serif text-[2.4rem] font-medium leading-none tracking-[-0.03em]">
-          FreeTUGA001<span class="text-accent">.</span>
+        <a href="/" class="inline-block" aria-label={`${site.title} — на главную`}>
+          <img
+            src="/logo.jpg"
+            alt="FreeTUGA001"
+            width="64"
+            height="64"
+            class="h-16 w-16 rounded-[1rem] object-cover"
+          />
         </a>
         <p class="mt-4 max-w-xs text-sm leading-relaxed text-muted">{site.description}</p>
       </div>
@@ -32,7 +38,7 @@ const years = year > start ? `${start}–${year}` : `${year}`;
       </nav>
 
       <div>
-        <p class="eyebrow">Ещё</p>
+        <p class="eyebrow">Проект</p>
         <ul class="mt-4 space-y-2.5 text-sm">
           <li>
             <a
@@ -42,24 +48,6 @@ const years = year > start ? `${start}–${year}` : `${year}`;
               target="_blank"
             >
               <Icon name="telegram" size={15} /> Telegram
-            </a>
-          </li>
-          <li>
-            <a
-              class="inline-flex items-center gap-2 text-muted transition-colors hover:text-ink"
-              href={site.github}
-              rel="noopener"
-              target="_blank"
-            >
-              <Icon name="github" size={15} /> GitHub
-            </a>
-          </li>
-          <li>
-            <a
-              class="inline-flex items-center gap-2 text-muted transition-colors hover:text-ink"
-              href={`mailto:${site.email}`}
-            >
-              <Icon name="mail" size={15} /> Почта
             </a>
           </li>
           <li>
@@ -74,14 +62,9 @@ const years = year > start ? `${start}–${year}` : `${year}`;
     <div
       class="mt-12 flex flex-col-reverse items-start justify-between gap-3 border-t border-line pt-6 text-xs text-muted sm:flex-row sm:items-center"
     >
-      <p>
-        © {years} {site.title}.
-        <a class="underline decoration-line underline-offset-4 transition-colors hover:text-ink" href="/about#license">
-          {site.license}
-        </a>
-      </p>
+      <p>© {years} {site.title}</p>
       <p class="flex items-center gap-5">
-        <span>Сделано на Astro · GitHub Pages</span>
+        <span>Сделано на Astro</span>
         <a class="inline-flex items-center gap-1 transition-colors hover:text-ink" href="#top">
           Наверх <Icon name="chevron-up" size={13} />
         </a>

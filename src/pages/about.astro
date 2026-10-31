@@ -5,14 +5,13 @@ import Icon from '../components/Icon.astro';
 import { site } from '../lib/site';
 
 const entry = await getEntry('pages', 'about');
-if (!entry) throw new Error('Страница «О сайте» не найдена: src/content/pages/about.mdx');
+if (!entry) throw new Error('Страница «О проекте» не найдена: src/content/pages/about.mdx');
 const { Content } = await render(entry);
-const githubLabel = site.github.replace('https://github.com/', '');
 ---
 
 <BaseLayout title={entry.data.title} description={entry.data.description}>
   <section class="container-narrow pt-14 sm:pt-20">
-    <p class="eyebrow">О блоге</p>
+    <p class="eyebrow">База знаний</p>
     <h1 class="display mt-3 text-[clamp(2.4rem,5vw,3.6rem)]">{entry.data.title}</h1>
     {entry.data.description && (
       <p class="mt-4 text-[1.05rem] leading-relaxed text-muted">{entry.data.description}</p>
@@ -26,58 +25,19 @@ const githubLabel = site.github.replace('https://github.com/', '');
   </section>
 
   <section class="container-narrow mt-12 pb-4">
-    <div class="grid gap-4 rounded-[1.4rem] border border-line bg-surface p-6 sm:grid-cols-2 sm:p-7">
-      <a class="group flex items-center gap-3" href={site.telegram} target="_blank" rel="noopener">
-        <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-chip text-muted">
-          <Icon name="telegram" size={17} />
-        </span>
-        <span>
-          <span class="block text-xs text-muted">Telegram</span>
-          <span class="text-sm transition-colors group-hover:text-accent">@FreeTUGA001</span>
-        </span>
-      </a>
-
-      <a class="group flex items-center gap-3" href={`mailto:${site.email}`}>
-        <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-chip text-muted">
-          <Icon name="mail" size={17} />
-        </span>
-        <span>
-          <span class="block text-xs text-muted">Почта</span>
-          <span class="text-sm transition-colors group-hover:text-accent">{site.email}</span>
-        </span>
-      </a>
-
-      <a class="group flex items-center gap-3" href={site.github} target="_blank" rel="noopener">
-        <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-chip text-muted">
-          <Icon name="github" size={17} />
-        </span>
-        <span>
-          <span class="block text-xs text-muted">GitHub</span>
-          <span class="text-sm transition-colors group-hover:text-accent">{githubLabel}</span>
-        </span>
-      </a>
-
-      <a class="group flex items-center gap-3" href="#license">
-        <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-chip text-muted">
-          <Icon name="check" size={17} />
-        </span>
-        <span>
-          <span class="block text-xs text-muted">Лицензия</span>
-          <span class="text-sm transition-colors group-hover:text-accent">{site.license}</span>
-        </span>
-      </a>
-
-      {site.donationUrl && (
-        <a class="group flex items-center gap-3" href={site.donationUrl} target="_blank" rel="noopener">
-          <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-chip text-muted">
-            <Icon name="heart" size={17} />
-          </span>
-          <span>
-            <span class="block text-xs text-muted">Поддержка</span>
-            <span class="text-sm transition-colors group-hover:text-accent">Поддержать проект</span>
-          </span>
-        </a>
-      )}
-    </div>
+    <a
+      class="group flex items-center gap-3 rounded-[1.4rem] border border-line bg-surface p-5 transition-colors hover:border-ink/30 sm:p-6"
+      href={site.telegram}
+      target="_blank"
+      rel="noopener"
+    >
+      <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-chip text-muted">
+        <Icon name="telegram" size={17} />
+      </span>
+      <span>
+        <span class="block text-xs text-muted">Telegram</span>
+        <span class="text-sm transition-colors group-hover:text-accent">@FreeTUGA001</span>
+      </span>
+    </a>
   </section>
 </BaseLayout>

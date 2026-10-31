@@ -12,7 +12,7 @@ export async function getPosts(): Promise<Post[]> {
   return posts.sort(byDateDesc);
 }
 
-export const postHref = (post: Post) => `/posts/${post.id}`;
+export const postHref = (post: Post) => `/materials/${post.id}`;
 
 export const postMinutes = (post: Post) => readingTime(post.body);
 

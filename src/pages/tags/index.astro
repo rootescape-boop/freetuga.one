@@ -7,12 +7,12 @@ const posts = await getPosts();
 const tags = collectTags(posts);
 ---
 
-<BaseLayout title="Теги" description="Все темы блога FreeTUGA001.">
+<BaseLayout title="Теги" description="Все темы базы знаний FreeTUGA001.">
   <section class="container-page pt-14 sm:pt-20">
     <p class="eyebrow">Навигация</p>
     <h1 class="display mt-3 text-[clamp(2.4rem,5vw,3.6rem)]">Теги</h1>
     <p class="mt-4 max-w-xl text-[1.02rem] leading-relaxed text-muted">
-      Темы, по которым можно читать блог. Чем больше число рядом — тем больше материалов.
+      Темы, по которым можно читать материалы. Чем больше число рядом — тем больше публикаций.
     </p>
   </section>
 
@@ -23,7 +23,7 @@ const tags = collectTags(posts);
           <a class="group flex items-baseline gap-4 border-b border-line py-4" href={`/tags/${tag.slug}`}>
             <span class="font-serif text-xl transition-colors group-hover:text-accent sm:text-2xl">{tag.name}</span>
             <span class="ml-auto text-sm text-muted">
-              {tag.count} {plural(tag.count, 'статья', 'статьи', 'статей')}
+              {tag.count} {plural(tag.count, 'материал', 'материала', 'материалов')}
             </span>
             <span class="text-muted transition-transform group-hover:translate-x-1">→</span>
           </a>

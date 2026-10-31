@@ -8,7 +8,7 @@ backend:
 site_url: https://freetuga.one
 display_url: https://freetuga.one
 logo:
-  src: /favicon.svg
+  src: /logo.jpg
 
 media_folder: public/uploads
 public_folder: /uploads
@@ -20,8 +20,8 @@ slug:
 
 collections:
   - name: posts
-    label: Статьи
-    label_singular: Статья
+    label: Материалы
+    label_singular: Материал
     folder: src/content/posts
     extension: mdx
     format: frontmatter
@@ -29,7 +29,7 @@ collections:
     delete: true
     identifier_field: title
     slug: "{{fields.slug}}"
-    preview_path: "posts/{{fields.slug}}"
+    preview_path: "materials/{{fields.slug}}"
     summary: "{{title}} — {{date | date('DD.MM.YYYY')}}"
     sortable_fields: [date, title]
     fields:
@@ -37,7 +37,7 @@ collections:
         label: Заголовок
         widget: string
       - name: slug
-        label: Адрес статьи
+        label: Адрес материала
         widget: string
         hint: "Латиницей, через дефис: naprimer-tak. Именно этот адрес попадёт в ссылку."
       - name: description
@@ -71,7 +71,7 @@ collections:
         widget: list
         required: false
         summary: "{{fields.platform}} · {{fields.id}}"
-        hint: "Ролики появятся над текстом статьи и загрузятся только по клику."
+        hint: "Ролики появятся над текстом материала и загрузятся только по клику."
         fields:
           - name: platform
             label: Платформа
@@ -97,21 +97,21 @@ collections:
         label: Показывать на главной
         widget: boolean
         default: false
-        hint: "Избранная статья занимает большой блок на главной странице."
+        hint: "Избранный материал занимает большой блок на главной странице."
       - name: draft
         label: Черновик
         widget: boolean
         default: false
         hint: "Черновики не попадают на сайт, но остаются в репозитории."
       - name: body
-        label: Текст статьи
+        label: Текст материала
         widget: markdown
 
   - name: pages
     label: Страницы
     files:
       - name: about
-        label: О сайте
+        label: О проекте
         file: src/content/pages/about.mdx
         fields:
           - name: title
@@ -139,24 +139,9 @@ collections:
           - name: description
             label: Описание
             widget: text
-          - name: email
-            label: Почта
-            widget: string
           - name: telegram
             label: Ссылка на Telegram
             widget: string
-          - name: github
-            label: Ссылка на GitHub
-            widget: string
-          - name: license
-            label: Лицензия
-            widget: string
-            hint: "Название лицензии для подвала сайта и страницы «О сайте»."
-          - name: donationUrl
-            label: Ссылка на донаты
-            widget: string
-            required: false
-            hint: "Можно оставить пустым. Если заполнить, на странице «О сайте» появится карточка поддержки."
           - name: startYear
             label: Год основания
             widget: number

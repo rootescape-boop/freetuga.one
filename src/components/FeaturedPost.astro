@@ -28,10 +28,7 @@ const minutes = postMinutes(post);
     </div>
 
     <div class="flex flex-col justify-center p-6 sm:p-9">
-      <p class="eyebrow flex items-center gap-2">
-        <span class="inline-block h-1.5 w-1.5 rounded-full bg-accent"></span>
-        {label}
-      </p>
+      <p class="eyebrow">{label}</p>
 
       <h2 class="post-card__title mt-4 font-serif text-[1.8rem] font-medium leading-[1.12] tracking-[-0.02em] sm:text-[2.2rem]">
         {title}
@@ -52,7 +49,7 @@ const minutes = postMinutes(post);
       )}
 
       <span class="mt-6 inline-flex items-center gap-2 text-sm font-medium">
-        Читать статью
+        Читать материал
         <span class="post-card__arrow"><Icon name="arrow-up-right" size={16} /></span>
       </span>
     </div>

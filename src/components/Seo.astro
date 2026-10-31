@@ -26,7 +26,7 @@ const jsonLd =
   type === 'article'
     ? {
         '@context': 'https://schema.org',
-        '@type': 'BlogPosting',
+        '@type': 'TechArticle',
         headline: title,
         description,
         image: [ogImage.href],
@@ -41,7 +41,7 @@ const jsonLd =
         name: site.title,
         url: canonical.origin,
         description: site.description,
-        sameAs: [site.telegram, site.github],
+        sameAs: [site.telegram],
       };
 ---
 

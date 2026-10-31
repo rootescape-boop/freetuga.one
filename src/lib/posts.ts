@@ -1,5 +1,6 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { readingTime } from './format';
+import { getSection, type SectionSlug } from './sections';
 
 export type Post = CollectionEntry<'posts'>;
 
@@ -12,7 +13,13 @@ export async function getPosts(): Promise<Post[]> {
   return posts.sort(byDateDesc);
 }
 
-export const postHref = (post: Post) => `/materials/${post.id}`;
+export async function getSectionPosts(section: SectionSlug): Promise<Post[]> {
+  return (await getPosts()).filter((post) => post.data.section === section);
+}
+
+export const postHref = (post: Post) => `/${post.data.section}/${post.id}`;
+
+export const postSection = (post: Post) => getSection(post.data.section);
 
 export const postMinutes = (post: Post) => readingTime(post.body);
 
@@ -35,8 +42,8 @@ const translit: Record<string, string> = {
   э: 'e', ю: 'yu', я: 'ya',
 };
 
-export function tagSlug(tag: string) {
-  return tag
+export function tagSlug(name: string): string {
+  return name
     .toLowerCase()
     .trim()
     .split('')

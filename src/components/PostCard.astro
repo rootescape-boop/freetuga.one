@@ -1,21 +1,24 @@
 ---
 import type { Post } from '../lib/posts';
-import { postHref, postMinutes } from '../lib/posts';
+import { postHref, postMinutes, postSection } from '../lib/posts';
 import { fullDate } from '../lib/format';
+import Icon from './Icon.astro';
 
 interface Props {
   post: Post;
   eager?: boolean;
   showDescription?: boolean;
+  showSection?: boolean;
 }
 
-const { post, eager = false, showDescription = true } = Astro.props;
-const { title, description, cover, coverAlt, tags, date } = post.data;
+const { post, eager = false, showDescription = true, showSection = false } = Astro.props;
+const { title, description, cover, coverAlt, tags, date, videos } = post.data;
 const href = postHref(post);
 const minutes = postMinutes(post);
+const section = postSection(post);
 ---
 
-<article class="post-card group relative">
+<article class="post-card group relative" data-entry>
   <a
     href={href}
     class="block rounded-[1.2rem] outline-none"
@@ -37,7 +40,20 @@ const minutes = postMinutes(post);
       )}
     </div>
 
+    {videos.length > 0 && (
+      <span class="post-card__video" aria-label={`Видео: ${videos.length}`}>
+        <Icon name="play" size={11} />
+        {videos.length}
+      </span>
+    )}
+
     <div class="mt-4 flex items-center gap-2 text-[0.78rem] text-muted">
+      {showSection && (
+        <>
+          <span class="post-card__section">{section.label}</span>
+          <span aria-hidden="true">·</span>
+        </>
+      )}
       <time datetime={date.toISOString()}>{fullDate(date)}</time>
       <span aria-hidden="true">·</span>
       <span>{minutes} мин чтения</span>
@@ -60,6 +76,31 @@ const minutes = postMinutes(post);
 </article>
 
 <style>
+  .post-card__video {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.3rem 0.55rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--c-ink) 78%, transparent);
+    color: var(--c-paper);
+    font-size: 0.72rem;
+    font-weight: 600;
+    line-height: 1;
+    backdrop-filter: blur(6px);
+  }
+
+  .post-card__section {
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 0.66rem;
+    font-weight: 600;
+    color: var(--c-accent);
+  }
+
   .cover-fallback {
     display: grid;
     place-items: center;

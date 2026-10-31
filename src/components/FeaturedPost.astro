@@ -1,6 +1,6 @@
 ---
 import type { Post } from '../lib/posts';
-import { postHref, postMinutes } from '../lib/posts';
+import { postHref, postMinutes, postSection } from '../lib/posts';
 import { fullDate } from '../lib/format';
 import Icon from './Icon.astro';
 
@@ -13,6 +13,7 @@ const { post, label = 'Избранное' } = Astro.props;
 const { title, description, cover, coverAlt, tags, date } = post.data;
 const href = postHref(post);
 const minutes = postMinutes(post);
+const section = postSection(post);
 ---
 
 <article class="post-card group relative overflow-hidden rounded-[1.6rem] border border-line bg-surface">
@@ -28,7 +29,7 @@ const minutes = postMinutes(post);
     </div>
 
     <div class="flex flex-col justify-center p-6 sm:p-9">
-      <p class="eyebrow">{label}</p>
+      <p class="eyebrow">{section.label} · {label}</p>
 
       <h2 class="post-card__title mt-4 font-serif text-[1.8rem] font-medium leading-[1.12] tracking-[-0.02em] sm:text-[2.2rem]">
         {title}
@@ -49,7 +50,7 @@ const minutes = postMinutes(post);
       )}
 
       <span class="mt-6 inline-flex items-center gap-2 text-sm font-medium">
-        Читать материал
+        Открыть запись
         <span class="post-card__arrow"><Icon name="arrow-up-right" size={16} /></span>
       </span>
     </div>

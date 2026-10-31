@@ -20,8 +20,8 @@ slug:
 
 collections:
   - name: posts
-    label: Материалы
-    label_singular: Материал
+    label: Записи
+    label_singular: Запись
     folder: src/content/posts
     extension: mdx
     format: frontmatter
@@ -29,13 +29,23 @@ collections:
     delete: true
     identifier_field: title
     slug: "{{fields.slug}}"
-    preview_path: "materials/{{fields.slug}}"
+    preview_path: "{{fields.section}}/{{fields.slug}}"
     summary: "{{title}} — {{date | date('DD.MM.YYYY')}}"
     sortable_fields: [date, title]
     fields:
       - name: title
         label: Заголовок
         widget: string
+      - name: section
+        label: Раздел
+        widget: select
+        options:
+          - { label: Материалы, value: materials }
+          - { label: ЧАВО, value: faq }
+          - { label: Релизы, value: releases }
+          - { label: ПО, value: software }
+        default: materials
+        hint: "Определяет адрес записи: /materials, /faq, /releases или /software."
       - name: slug
         label: Адрес материала
         widget: string

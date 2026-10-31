@@ -2,19 +2,22 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PostCard from '../components/PostCard.astro';
 import FeaturedPost from '../components/FeaturedPost.astro';
-import VideoEmbed from '../components/VideoEmbed.astro';
 import Icon from '../components/Icon.astro';
 import { collectTags, getPosts, postHref } from '../lib/posts';
+import { sectionList } from '../lib/sections';
 import { dayMonth, plural } from '../lib/format';
-import { platformLabel } from '../lib/videos';
 import { site } from '../lib/site';
 
 const posts = await getPosts();
 const featured = posts.find((post) => post.data.featured) ?? posts[0];
 const rest = posts.filter((post) => post.id !== featured?.id).slice(0, 6);
-const videoPosts = posts.filter((post) => post.data.videos.length > 0).slice(0, 2);
 const tags = collectTags(posts).slice(0, 9);
 const videoCount = posts.reduce((total, post) => total + post.data.videos.length, 0);
+
+const sectionCounts = new Map<string, number>();
+for (const post of posts) {
+  sectionCounts.set(post.data.section, (sectionCounts.get(post.data.section) ?? 0) + 1);
+}
 ---
 
 <BaseLayout title={site.title}>
@@ -23,16 +26,16 @@ const videoCount = posts.reduce((total, post) => total + post.data.videos.length
       <div class="rise">
         <p class="eyebrow flex items-center gap-3">
           <span class="inline-block h-px w-8 bg-accent"></span>
-          База знаний · с {site.startYear}
+          Сообщество · с {site.startYear}
         </p>
 
         <h1 class="display mt-6 max-w-[17ch] text-[clamp(2.6rem,6.4vw,4.9rem)]">
-          Документация, разборы и видео по проекту.
+          База знаний по настройке ГУ ECARX.
         </h1>
 
         <p class="mt-6 max-w-xl text-[1.05rem] leading-relaxed text-muted">
-          Открытая база знаний FreeTUGA001: устройство проекта, технические решения и инструкции.
-          Материалы доступны по модели Donationware — без подписок и платного доступа.
+          FreeTUGA001 — сообщество владельцев автомобилей с ГУ ECARX. Настройка и тюнинг головного
+          устройства, дополнительное ПО и инструкции. Всё ПО доступно по модели Donationware.
         </p>
 
         <div class="mt-8 flex flex-wrap items-center gap-3">
@@ -40,7 +43,7 @@ const videoCount = posts.reduce((total, post) => total + post.data.videos.length
             Открыть материалы
             <Icon name="arrow-right" size={16} />
           </a>
-          <a class="btn btn-ghost" href="/videos">Смотреть видео</a>
+          <a class="btn btn-ghost" href="/faq">Частые вопросы</a>
         </div>
       </div>
 
@@ -63,10 +66,37 @@ const videoCount = posts.reduce((total, post) => total + post.data.videos.length
         </ul>
 
         <div class="mt-5 flex flex-wrap gap-x-5 gap-y-1 text-[0.72rem] text-muted">
-          <span>{posts.length} {plural(posts.length, 'материал', 'материала', 'материалов')}</span>
+          <span>{posts.length} {plural(posts.length, 'запись', 'записи', 'записей')}</span>
           <span>{videoCount} {plural(videoCount, 'видео', 'видео', 'видео')}</span>
         </div>
       </aside>
+    </div>
+  </section>
+
+  <section class="container-page pt-12">
+    <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      {sectionList.map((section) => {
+        const count = sectionCounts.get(section.slug) ?? 0;
+        return (
+          <a
+            class="group rounded-2xl border border-line bg-surface/60 p-5 transition-colors hover:border-ink/40"
+            href={`/${section.slug}`}
+          >
+            <span class="eyebrow">{section.eyebrow}</span>
+            <span class="mt-1.5 flex items-center justify-between font-serif text-xl font-medium tracking-[-0.01em]">
+              {section.label}
+              <Icon
+                name="arrow-up-right"
+                size={14}
+                class="text-muted transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+              />
+            </span>
+            <span class="mt-1 block text-xs text-muted">
+              {count} {plural(count, 'запись', 'записи', 'записей')}
+            </span>
+          </a>
+        );
+      })}
     </div>
   </section>
 
@@ -81,7 +111,7 @@ const videoCount = posts.reduce((total, post) => total + post.data.videos.length
       <div>
         <p class="eyebrow">Пополнения</p>
         <h2 class="mt-2 font-serif text-[1.9rem] font-medium tracking-[-0.02em] sm:text-[2.2rem]">
-          Новые материалы
+          Новые записи
         </h2>
       </div>
       <a class="group inline-flex items-center gap-1.5 text-sm text-muted transition-colors hover:text-ink" href="/materials">
@@ -91,55 +121,15 @@ const videoCount = posts.reduce((total, post) => total + post.data.videos.length
     </div>
 
     <div class="mt-8 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-      {rest.map((post, index) => <PostCard post={post} eager={index < 2} />)}
+      {rest.map((post, index) => <PostCard post={post} eager={index < 2} showSection />)}
     </div>
   </section>
-
-  {videoPosts.length > 0 && (
-    <section class="mt-16 border-y border-line bg-surface/60 sm:mt-20">
-      <div class="container-page py-14">
-        <div class="flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <p class="eyebrow">Видео</p>
-            <h2 class="mt-2 font-serif text-[1.9rem] font-medium tracking-[-0.02em] sm:text-[2.2rem]">
-              Смотреть
-            </h2>
-          </div>
-          <a class="group inline-flex items-center gap-1.5 text-sm text-muted transition-colors hover:text-ink" href="/videos">
-            Все видео
-            <Icon name="arrow-right" size={15} class="transition-transform group-hover:translate-x-0.5" />
-          </a>
-        </div>
-
-        <div class="mt-8 grid gap-6 md:grid-cols-2">
-          {videoPosts.map((post) => (
-            <article>
-              <VideoEmbed
-                platform={post.data.videos[0].platform}
-                id={post.data.videos[0].id}
-                title={post.data.videos[0].title ?? post.data.title}
-                link={postHref(post)}
-              />
-              <div class="mt-4 flex items-center gap-3 text-[0.72rem] uppercase tracking-wide text-muted">
-                <time datetime={post.data.date.toISOString()}>{dayMonth(post.data.date)}</time>
-                <span aria-hidden="true">·</span>
-                <span>{platformLabel(post.data.videos[0].platform)}</span>
-              </div>
-              <a class="mt-1.5 block font-serif text-xl leading-snug transition-colors hover:text-accent" href={postHref(post)}>
-                {post.data.title}
-              </a>
-            </article>
-          ))}
-        </div>
-      </div>
-    </section>
-  )}
 
   {tags.length > 0 && (
     <section class="container-page py-14">
       <div class="flex items-end justify-between gap-6">
         <div>
-          <p class="eyebrow">Разделы</p>
+          <p class="eyebrow">Теги</p>
           <h2 class="mt-2 font-serif text-[1.9rem] font-medium tracking-[-0.02em] sm:text-[2.2rem]">
             Темы базы знаний
           </h2>
@@ -164,8 +154,8 @@ const videoCount = posts.reduce((total, post) => total + post.data.videos.length
         <p class="eyebrow">Связь</p>
         <h2 class="mt-2 font-serif text-2xl font-medium tracking-[-0.01em]">Обсуждение проекта</h2>
         <p class="mt-2 max-w-lg text-sm leading-relaxed text-muted">
-          Новые материалы, вопросы и обсуждение — в Telegram-канале проекта. Там же можно предложить
-          тему для базы знаний.
+          Новые материалы, вопросы и обсуждение — в Telegram-сообществе проекта. Там же можно
+          предложить тему для базы знаний.
         </p>
       </div>
       <a class="btn btn-primary w-fit" href={site.telegram} target="_blank" rel="noopener">

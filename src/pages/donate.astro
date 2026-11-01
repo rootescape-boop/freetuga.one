@@ -24,7 +24,7 @@ const { Content } = await render(entry);
     </div>
   </section>
 
-  <section class="container-narrow mt-12 pb-4">
+  <section class="container-narrow mt-12 flex flex-col gap-4 pb-4 sm:flex-row">
     <a
       class="group flex items-center gap-3 rounded-[1.4rem] border border-line bg-surface p-5 transition-colors hover:border-ink/30 sm:p-6"
       href={site.telegram}
@@ -37,6 +37,20 @@ const { Content } = await render(entry);
       <span>
         <span class="block text-xs text-muted">Telegram</span>
         <span class="text-sm transition-colors group-hover:text-accent">@FreeTUGA001</span>
+      </span>
+    </a>
+    <a
+      class="group flex items-center gap-3 rounded-[1.4rem] border border-line bg-surface p-5 transition-colors hover:border-ink/30 sm:p-6"
+      href="https://max.ru/join/zG9hZuuk1s8SP2UZ4EDhwbeRnKCzwKAf5VOi-kr6EV8"
+      target="_blank"
+      rel="noopener"
+    >
+      <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-chip text-muted">
+        <Icon name="max" size={17} />
+      </span>
+      <span>
+        <span class="block text-xs text-muted">Max</span>
+        <span class="text-sm transition-colors group-hover:text-accent">Написать в Max</span>
       </span>
     </a>
   </section>

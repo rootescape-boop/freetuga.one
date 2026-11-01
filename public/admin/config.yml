@@ -134,6 +134,20 @@ collections:
           - name: body
             label: Текст
             widget: markdown
+      - name: donate
+        label: Поддержать проект
+        file: src/content/pages/donate.mdx
+        fields:
+          - name: title
+            label: Заголовок
+            widget: string
+          - name: description
+            label: Описание
+            widget: text
+            required: false
+          - name: body
+            label: Текст
+            widget: markdown
 
   - name: settings
     label: Настройки

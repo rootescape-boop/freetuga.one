@@ -1,0 +1,43 @@
+---
+import { getEntry, render } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import { site } from '../lib/site';
+
+const entry = await getEntry('pages', 'donate');
+if (!entry) throw new Error('Страница «Поддержка» не найдена: src/content/pages/donate.mdx');
+const { Content } = await render(entry);
+---
+
+<BaseLayout title={entry.data.title} description={entry.data.description}>
+  <section class="container-narrow pt-14 sm:pt-20">
+    <p class="eyebrow">Донат</p>
+    <h1 class="display mt-3 text-[clamp(2.4rem,5vw,3.6rem)]">{entry.data.title}</h1>
+    {entry.data.description && (
+      <p class="mt-4 text-[1.05rem] leading-relaxed text-muted">{entry.data.description}</p>
+    )}
+  </section>
+
+  <section class="container-narrow mt-10">
+    <div class="prose">
+      <Content />
+    </div>
+  </section>
+
+  <section class="container-narrow mt-12 pb-4">
+    <a
+      class="group flex items-center gap-3 rounded-[1.4rem] border border-line bg-surface p-5 transition-colors hover:border-ink/30 sm:p-6"
+      href={site.telegram}
+      target="_blank"
+      rel="noopener"
+    >
+      <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-chip text-muted">
+        <Icon name="telegram" size={17} />
+      </span>
+      <span>
+        <span class="block text-xs text-muted">Telegram</span>
+        <span class="text-sm transition-colors group-hover:text-accent">@FreeTUGA001</span>
+      </span>
+    </a>
+  </section>
+</BaseLayout>

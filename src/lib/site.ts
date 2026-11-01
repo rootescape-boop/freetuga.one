@@ -9,5 +9,6 @@ export const nav = [
   { label: sections.releases.label, href: '/releases' },
   { label: sections.software.label, href: '/software' },
   { label: 'Теги', href: '/tags' },
+  { label: 'Поддержать', href: '/donate' },
   { label: 'О проекте', href: '/about' },
 ];

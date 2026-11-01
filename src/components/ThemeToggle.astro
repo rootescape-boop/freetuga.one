@@ -1,0 +1,41 @@
+---
+import Icon from './Icon.astro';
+---
+
+<button
+  id="theme-toggle"
+  type="button"
+  class="grid h-10 w-10 place-items-center rounded-full border border-line text-muted transition-colors hover:border-ink hover:text-ink"
+  aria-label="Переключить тему"
+  title="Светлая / тёмная тема"
+>
+  <span class="theme-moon"><Icon name="moon" size={17} /></span>
+  <span class="theme-sun"><Icon name="sun" size={17} /></span>
+</button>
+
+<style>
+  .theme-sun {
+    display: none;
+  }
+
+  :global(.dark) .theme-moon {
+    display: none;
+  }
+
+  :global(.dark) .theme-sun {
+    display: block;
+  }
+</style>
+
+<script is:inline>
+  (() => {
+    const button = document.getElementById('theme-toggle');
+    if (!button) return;
+    button.addEventListener('click', () => {
+      const isDark = document.documentElement.classList.toggle('dark');
+      try {
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      } catch {}
+    });
+  })();
+</script>

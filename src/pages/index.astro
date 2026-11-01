@@ -1,0 +1,167 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostCard from '../components/PostCard.astro';
+import FeaturedPost from '../components/FeaturedPost.astro';
+import Icon from '../components/Icon.astro';
+import { collectTags, getPosts, postHref } from '../lib/posts';
+import { sectionList } from '../lib/sections';
+import { dayMonth, plural } from '../lib/format';
+import { site } from '../lib/site';
+
+const posts = await getPosts();
+const featured = posts.find((post) => post.data.featured) ?? posts[0];
+const rest = posts.filter((post) => post.id !== featured?.id).slice(0, 6);
+const tags = collectTags(posts).slice(0, 9);
+const videoCount = posts.reduce((total, post) => total + post.data.videos.length, 0);
+
+const sectionCounts = new Map<string, number>();
+for (const post of posts) {
+  sectionCounts.set(post.data.section, (sectionCounts.get(post.data.section) ?? 0) + 1);
+}
+---
+
+<BaseLayout title={site.title}>
+  <section class="container-page pt-14 sm:pt-20">
+    <div class="grid gap-12 lg:grid-cols-[1.4fr_0.6fr] lg:items-end">
+      <div class="rise">
+        <p class="eyebrow flex items-center gap-3">
+          <span class="inline-block h-px w-8 bg-accent"></span>
+          Сообщество · с {site.startYear}
+        </p>
+
+        <h1 class="display mt-6 max-w-[17ch] text-[clamp(2.6rem,6.4vw,4.9rem)]">
+          База знаний по настройке ГУ ECARX.
+        </h1>
+
+        <p class="mt-6 max-w-xl text-[1.05rem] leading-relaxed text-muted">
+          FreeTUGA001 — сообщество владельцев автомобилей с ГУ ECARX. Настройка и тюнинг головного
+          устройства, дополнительное ПО и инструкции. Всё ПО доступно по модели Donationware.
+        </p>
+
+        <div class="mt-8 flex flex-wrap items-center gap-3">
+          <a class="btn btn-primary" href="/materials">
+            Открыть материалы
+            <Icon name="arrow-right" size={16} />
+          </a>
+          <a class="btn btn-ghost" href="/faq">Частые вопросы</a>
+        </div>
+      </div>
+
+      <aside class="rise rise-2 border-t border-line pt-6 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-1">
+        <p class="eyebrow">Недавнее</p>
+        <ul class="mt-3 divide-y divide-line">
+          {posts.slice(0, 3).map((post) => (
+            <li>
+              <a class="group flex items-baseline gap-4 py-3.5" href={postHref(post)}>
+                <time class="w-12 shrink-0 text-[0.7rem] uppercase tracking-wide text-muted" datetime={post.data.date.toISOString()}>
+                  {dayMonth(post.data.date)}
+                </time>
+                <span class="flex-1 text-[0.92rem] leading-snug transition-colors group-hover:text-accent">
+                  {post.data.title}
+                </span>
+                <Icon name="arrow-up-right" size={13} class="mt-1 shrink-0 text-muted" />
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        <div class="mt-5 flex flex-wrap gap-x-5 gap-y-1 text-[0.72rem] text-muted">
+          <span>{posts.length} {plural(posts.length, 'запись', 'записи', 'записей')}</span>
+          <span>{videoCount} {plural(videoCount, 'видео', 'видео', 'видео')}</span>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="container-page pt-12">
+    <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      {sectionList.map((section) => {
+        const count = sectionCounts.get(section.slug) ?? 0;
+        return (
+          <a
+            class="group rounded-2xl border border-line bg-surface/60 p-5 transition-colors hover:border-ink/40"
+            href={`/${section.slug}`}
+          >
+            <span class="eyebrow">{section.eyebrow}</span>
+            <span class="mt-1.5 flex items-center justify-between font-serif text-xl font-medium tracking-[-0.01em]">
+              {section.label}
+              <Icon
+                name="arrow-up-right"
+                size={14}
+                class="text-muted transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+              />
+            </span>
+            <span class="mt-1 block text-xs text-muted">
+              {count} {plural(count, 'запись', 'записи', 'записей')}
+            </span>
+          </a>
+        );
+      })}
+    </div>
+  </section>
+
+  {featured && (
+    <section class="container-page pt-14 sm:pt-20">
+      <FeaturedPost post={featured} />
+    </section>
+  )}
+
+  <section class="container-page pt-16 sm:pt-20">
+    <div class="flex items-end justify-between gap-6 border-b border-line pb-5">
+      <div>
+        <p class="eyebrow">Пополнения</p>
+        <h2 class="mt-2 font-serif text-[1.9rem] font-medium tracking-[-0.02em] sm:text-[2.2rem]">
+          Новые записи
+        </h2>
+      </div>
+      <a class="group inline-flex items-center gap-1.5 text-sm text-muted transition-colors hover:text-ink" href="/materials">
+        Все материалы
+        <Icon name="arrow-right" size={15} class="transition-transform group-hover:translate-x-0.5" />
+      </a>
+    </div>
+
+    <div class="mt-8 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+      {rest.map((post, index) => <PostCard post={post} eager={index < 2} showSection />)}
+    </div>
+  </section>
+
+  {tags.length > 0 && (
+    <section class="container-page py-14">
+      <div class="flex items-end justify-between gap-6">
+        <div>
+          <p class="eyebrow">Теги</p>
+          <h2 class="mt-2 font-serif text-[1.9rem] font-medium tracking-[-0.02em] sm:text-[2.2rem]">
+            Темы базы знаний
+          </h2>
+        </div>
+        <a class="text-sm text-muted transition-colors hover:text-ink" href="/tags">Все теги</a>
+      </div>
+
+      <div class="mt-6 flex flex-wrap gap-2">
+        {tags.map((tag) => (
+          <a class="tag tag--lg" href={`/tags/${tag.slug}`}>
+            {tag.name}
+            <span class="ml-1.5 opacity-60">{tag.count}</span>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <section class="container-page pb-6">
+    <div class="grid items-center gap-6 rounded-[1.6rem] border border-line bg-surface p-8 sm:p-10 md:grid-cols-[1fr_auto]">
+      <div>
+        <p class="eyebrow">Связь</p>
+        <h2 class="mt-2 font-serif text-2xl font-medium tracking-[-0.01em]">Обсуждение проекта</h2>
+        <p class="mt-2 max-w-lg text-sm leading-relaxed text-muted">
+          Новые материалы, вопросы и обсуждение — в Telegram-сообществе проекта. Там же можно
+          предложить тему для базы знаний.
+        </p>
+      </div>
+      <a class="btn btn-primary w-fit" href={site.telegram} target="_blank" rel="noopener">
+        <Icon name="telegram" size={16} />
+        @FreeTUGA001
+      </a>
+    </div>
+  </section>
+</BaseLayout>

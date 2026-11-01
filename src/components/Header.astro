@@ -1,0 +1,83 @@
+---
+import { nav, site } from '../lib/site';
+import Icon from './Icon.astro';
+import ThemeToggle from './ThemeToggle.astro';
+
+const current = Astro.url.pathname.replace(/\/+$/, '') || '/';
+const isActive = (href: string) => current === href || current.startsWith(`${href}/`);
+---
+
+<header class="sticky top-0 z-50 h-[72px] border-b border-line/80 bg-paper/85 backdrop-blur-md">
+  <div class="container-page flex h-full items-center justify-between gap-5">
+    <a href="/" class="flex min-w-0 items-center gap-2.5 sm:gap-3" aria-label={`${site.title} — на главную`}>
+      <img
+        src="/logo.jpg"
+        alt="FreeTUGA001"
+        width="48"
+        height="48"
+        class="h-12 w-12 shrink-0 rounded-[0.8rem] object-cover"
+      />
+      <span class="truncate text-[0.82rem] font-semibold tracking-[0.05em] text-ink sm:text-[0.98rem]">
+        {site.title}
+      </span>
+    </a>
+
+    <nav class="hidden items-center gap-6 lg:flex" aria-label="Основная навигация">
+      {nav.map((item) => (
+        <a class="nav-link" href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
+          {item.label}
+        </a>
+      ))}
+    </nav>
+
+    <div class="flex shrink-0 items-center gap-1.5">
+      <a
+        href="/search"
+        class="grid h-10 w-10 place-items-center rounded-full text-muted transition-colors hover:text-ink"
+        aria-label="Поиск по сайту"
+      >
+        <Icon name="search" size={18} />
+      </a>
+      <ThemeToggle />
+
+      <details class="mobile-menu lg:hidden">
+        <summary
+          class="grid h-10 w-10 cursor-pointer place-items-center rounded-full border border-line text-muted"
+          aria-label="Открыть меню"
+        >
+          <Icon name="menu" size={18} />
+        </summary>
+        <div class="absolute right-4 top-[calc(100%+0.6rem)] w-60 rounded-2xl border border-line bg-surface p-2 shadow-[0_24px_60px_-24px_rgba(0,0,0,.35)]">
+          {nav.map((item) => (
+            <a
+              class="block rounded-xl px-3 py-2.5 text-[0.95rem] transition-colors hover:bg-chip"
+              href={item.href}
+            >
+              {item.label}
+            </a>
+          ))}
+          <a
+            class="mt-1 block rounded-xl border-t border-line px-3 py-2.5 text-[0.95rem] text-muted transition-colors hover:bg-chip hover:text-ink"
+            href="/search"
+          >
+            Поиск
+          </a>
+        </div>
+      </details>
+    </div>
+  </div>
+</header>
+
+<style>
+  .mobile-menu {
+    position: static;
+  }
+
+  .mobile-menu summary {
+    list-style: none;
+  }
+
+  .mobile-menu summary::-webkit-details-marker {
+    display: none;
+  }
+</style>

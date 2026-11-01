@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" width="1600" height="1000" role="img" aria-label="Абстрактная композиция в синих и медных тонах">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#e5ebef"/>
+      <stop offset="1" stop-color="#c8d5de"/>
+    </linearGradient>
+    <radialGradient id="blob1" cx="75%" cy="30%" r="55%">
+      <stop offset="0" stop-color="#2f5468" stop-opacity=".55"/>
+      <stop offset="1" stop-color="#2f5468" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="blob2" cx="18%" cy="88%" r="52%">
+      <stop offset="0" stop-color="#c0562f" stop-opacity=".42"/>
+      <stop offset="1" stop-color="#c0562f" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.92" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="1000" fill="url(#bg)"/>
+  <rect width="1600" height="1000" fill="url(#blob1)"/>
+  <rect width="1600" height="1000" fill="url(#blob2)"/>
+  <g fill="none" stroke="#14232b" stroke-opacity=".18" stroke-width="2">
+    <circle cx="1120" cy="500" r="260"/>
+    <path d="M1120 240v520M860 500h520"/>
+    <path d="M1060 380l120 120-120 120-120-120z"/>
+  </g>
+  <g fill="#14232b" fill-opacity=".55">
+    <circle cx="300" cy="300" r="7"/>
+    <circle cx="1380" cy="800" r="9"/>
+  </g>
+  <rect width="1600" height="1000" filter="url(#grain)" opacity=".14"/>
+</svg>

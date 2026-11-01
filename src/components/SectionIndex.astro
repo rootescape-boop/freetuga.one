@@ -1,0 +1,130 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostCard from './PostCard.astro';
+import Icon from './Icon.astro';
+import { getSectionPosts } from '../lib/posts';
+import { getSection, type SectionSlug } from '../lib/sections';
+import { plural } from '../lib/format';
+
+interface Props {
+  section: SectionSlug;
+  showFilters?: boolean;
+}
+
+const { section: slug, showFilters = false } = Astro.props;
+const section = getSection(slug);
+const posts = await getSectionPosts(slug);
+const withVideo = posts.filter((post) => post.data.videos.length > 0).length;
+const withoutVideo = posts.length - withVideo;
+---
+
+<BaseLayout title={section.label} description={section.description}>
+  <section class="container-page pt-14 sm:pt-20">
+    <p class="eyebrow">{section.eyebrow}</p>
+    <div class="mt-3 flex flex-wrap items-end justify-between gap-5 border-b border-line pb-6">
+      <h1 class="display text-[clamp(2.4rem,5vw,3.6rem)]">{section.label}</h1>
+      <p class="text-sm text-muted">
+        {posts.length} {plural(posts.length, 'запись', 'записи', 'записей')}
+        <span class="mx-2 opacity-50">·</span>
+        <a class="underline decoration-line underline-offset-4 hover:text-ink" href="/archive">по датам</a>
+      </p>
+    </div>
+    <p class="mt-5 max-w-xl text-[1.02rem] leading-relaxed text-muted">{section.intro}</p>
+  </section>
+
+  {posts.length === 0 ? (
+    <section class="container-page py-14">
+      <p class="rounded-[1.4rem] border border-dashed border-line px-6 py-12 text-center text-sm text-muted">
+        {section.empty}
+      </p>
+    </section>
+  ) : (
+    <>
+      {showFilters && (
+        <section class="container-page pt-8">
+          <div class="flex flex-wrap items-center gap-2" role="group" aria-label="Фильтр записей">
+            <button class="filter-pill" type="button" data-filter="all" aria-pressed="true">
+              Все <span class="filter-pill__count">{posts.length}</span>
+            </button>
+            <button class="filter-pill" type="button" data-filter="video" aria-pressed="false">
+              <Icon name="play" size={11} />
+              С видео <span class="filter-pill__count">{withVideo}</span>
+            </button>
+            <button class="filter-pill" type="button" data-filter="text" aria-pressed="false">
+              Без видео <span class="filter-pill__count">{withoutVideo}</span>
+            </button>
+          </div>
+        </section>
+      )}
+
+      <section class="container-page py-10">
+        <div id="entries" class="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+          {posts.map((post, index) => (
+            <div class="entry" data-videos={post.data.videos.length} data-entry-wrap>
+              <PostCard post={post} eager={index < 3} />
+            </div>
+          ))}
+        </div>
+        <p id="entries-empty" class="hidden py-12 text-center text-sm text-muted">
+          В этом фильтре пока пусто.
+        </p>
+      </section>
+    </>
+  )}
+</BaseLayout>
+
+<script>
+  const pills = document.querySelectorAll<HTMLButtonElement>('[data-filter]');
+  const entries = [...document.querySelectorAll<HTMLElement>('[data-entry-wrap]')];
+  const empty = document.getElementById('entries-empty');
+
+  const apply = (filter: string) => {
+    let visible = 0;
+    for (const entry of entries) {
+      const count = Number(entry.dataset.videos ?? '0');
+      const show =
+        filter === 'all' || (filter === 'video' && count > 0) || (filter === 'text' && count === 0);
+      entry.hidden = !show;
+      if (show) visible += 1;
+    }
+    empty?.classList.toggle('hidden', visible > 0);
+  };
+
+  for (const pill of pills) {
+    pill.addEventListener('click', () => {
+      for (const other of pills) other.setAttribute('aria-pressed', String(other === pill));
+      apply(pill.dataset.filter ?? 'all');
+    });
+  }
+</script>
+
+<style>
+  .filter-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.85rem;
+    border-radius: 999px;
+    border: 1px solid var(--c-line);
+    color: var(--c-muted);
+    font-size: 0.82rem;
+    font-weight: 500;
+    transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+  }
+
+  .filter-pill:hover {
+    border-color: var(--c-ink);
+    color: var(--c-ink);
+  }
+
+  .filter-pill[aria-pressed='true'] {
+    background: var(--c-ink);
+    border-color: var(--c-ink);
+    color: var(--c-paper);
+  }
+
+  .filter-pill__count {
+    opacity: 0.6;
+    font-size: 0.74rem;
+  }
+</style>

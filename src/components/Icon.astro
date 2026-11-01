@@ -11,7 +11,6 @@ interface Props {
     | 'arrow-left'
     | 'play'
     | 'telegram'
-    | 'max'
     | 'link'
     | 'chevron-up';
   size?: number;
@@ -32,7 +31,6 @@ const icons: Record<Props['name'], string> = {
   play: '<path d="M8 5.5v13l11-6.5-11-6.5Z" fill="currentColor" stroke="none"/>',
   telegram:
     '<path d="M21.5 4.3 2.9 11.4c-1.2.5-1.2 1.2-.2 1.5l4.8 1.5 1.8 5.5c.2.6.4.7 1 .3l2.6-1.9 4.7 3.5c.9.5 1.5.2 1.7-.8l3-14c.3-1.2-.4-1.8-1.3-1.4Z"/><path d="m8.5 14.2 9.4-5.9"/>',
-  max: '<circle cx="12" cy="12" r="9"/><path d="M8 16V8l4 5 4-5v8"/>',
   link: '<path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/>',
   'chevron-up': '<path d="m6 15 6-6 6 6"/>',
 };

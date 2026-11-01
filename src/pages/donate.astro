@@ -2,6 +2,7 @@
 import { getEntry, render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Icon from '../components/Icon.astro';
+import MaxIcon from '../components/MaxIcon.astro';
 import { site } from '../lib/site';
 
 const entry = await getEntry('pages', 'donate');
@@ -45,8 +46,8 @@ const { Content } = await render(entry);
       target="_blank"
       rel="noopener"
     >
-      <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-chip text-muted">
-        <Icon name="max" size={17} />
+      <span class="grid h-10 w-10 shrink-0 place-items-center overflow-hidden rounded-xl">
+        <MaxIcon size={40} />
       </span>
       <span>
         <span class="block text-xs text-muted">Max</span>

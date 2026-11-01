@@ -1,6 +1,7 @@
 ---
 import { nav, site } from '../lib/site';
 import Icon from './Icon.astro';
+import MaxIcon from './MaxIcon.astro';
 
 const year = new Date().getFullYear();
 const start = site.startYear;
@@ -49,6 +50,19 @@ const years = year > start ? `${start}–${year}` : `${year}`;
               target="_blank"
             >
               <Icon name="telegram" size={15} /> Telegram
+            </a>
+          </li>
+          <li>
+            <a
+              class="inline-flex items-center gap-2 text-muted transition-colors hover:text-ink"
+              href={site.max}
+              rel="noopener"
+              target="_blank"
+            >
+              <span class="h-[1.05rem] w-[1.05rem] overflow-hidden rounded-[0.3rem]">
+                <MaxIcon size={17} />
+              </span>
+              Max
             </a>
           </li>
           <li>

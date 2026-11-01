@@ -2,6 +2,7 @@
 import { getEntry, render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Icon from '../components/Icon.astro';
+import MaxIcon from '../components/MaxIcon.astro';
 import { site } from '../lib/site';
 
 const entry = await getEntry('pages', 'about');
@@ -24,7 +25,7 @@ const { Content } = await render(entry);
     </div>
   </section>
 
-  <section class="container-narrow mt-12 pb-4">
+  <section class="container-narrow mt-12 flex flex-col gap-4 pb-4 sm:flex-row">
     <a
       class="group flex items-center gap-3 rounded-[1.4rem] border border-line bg-surface p-5 transition-colors hover:border-ink/30 sm:p-6"
       href={site.telegram}
@@ -37,6 +38,20 @@ const { Content } = await render(entry);
       <span>
         <span class="block text-xs text-muted">Telegram</span>
         <span class="text-sm transition-colors group-hover:text-accent">@FreeTUGA001</span>
+      </span>
+    </a>
+    <a
+      class="group flex items-center gap-3 rounded-[1.4rem] border border-line bg-surface p-5 transition-colors hover:border-ink/30 sm:p-6"
+      href={site.max}
+      target="_blank"
+      rel="noopener"
+    >
+      <span class="grid h-10 w-10 shrink-0 place-items-center overflow-hidden rounded-xl">
+        <MaxIcon size={40} />
+      </span>
+      <span>
+        <span class="block text-xs text-muted">Max</span>
+        <span class="text-sm transition-colors group-hover:text-accent">Написать в Max</span>
       </span>
     </a>
   </section>

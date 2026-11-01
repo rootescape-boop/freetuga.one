@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import PostCard from '../components/PostCard.astro';
 import FeaturedPost from '../components/FeaturedPost.astro';
 import Icon from '../components/Icon.astro';
+import MaxIcon from '../components/MaxIcon.astro';
 import { collectTags, getPosts, postHref } from '../lib/posts';
 import { sectionList } from '../lib/sections';
 import { dayMonth, plural } from '../lib/format';
@@ -158,10 +159,18 @@ for (const post of posts) {
           предложить тему для базы знаний.
         </p>
       </div>
-      <a class="btn btn-primary w-fit" href={site.telegram} target="_blank" rel="noopener">
-        <Icon name="telegram" size={16} />
-        @FreeTUGA001
-      </a>
+      <div class="flex flex-wrap gap-3">
+        <a class="btn btn-primary w-fit" href={site.telegram} target="_blank" rel="noopener">
+          <Icon name="telegram" size={16} />
+          @FreeTUGA001
+        </a>
+        <a class="btn btn-ghost w-fit" href={site.max} target="_blank" rel="noopener">
+          <span class="h-[1.15rem] w-[1.15rem] overflow-hidden rounded-[0.3rem]">
+            <MaxIcon size={18} />
+          </span>
+          Написать в Max
+        </a>
+      </div>
     </div>
   </section>
 </BaseLayout>

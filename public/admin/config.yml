@@ -166,6 +166,9 @@ collections:
           - name: telegram
             label: Ссылка на Telegram
             widget: string
+          - name: max
+            label: Ссылка на Max
+            widget: string
           - name: startYear
             label: Год основания
             widget: number

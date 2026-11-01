@@ -7,6 +7,7 @@ import Rutube from './mdx/Rutube.astro';
 import Vk from './mdx/Vk.astro';
 import Video from './mdx/Video.astro';
 import Icon from './Icon.astro';
+import MaxIcon from './MaxIcon.astro';
 import { getSectionPosts, postHref, postMinutes, postSection, tagSlug, type Post } from '../lib/posts';
 import { fullDate } from '../lib/format';
 import { site } from '../lib/site';
@@ -126,15 +127,28 @@ const components = { YouTube, Rutube, Vk, Video };
             <a class="tag" href={`/tags/${tagSlug(tag)}`}>{tag}</a>
           ))}
         </div>
-        <a
-          class="inline-flex items-center gap-1.5 text-xs text-muted transition-colors hover:text-ink"
-          href={site.telegram}
-          rel="noopener"
-          target="_blank"
-        >
-          <Icon name="telegram" size={13} />
-          Обсудить в Telegram
-        </a>
+        <div class="flex flex-wrap gap-4">
+          <a
+            class="inline-flex items-center gap-1.5 text-xs text-muted transition-colors hover:text-ink"
+            href={site.telegram}
+            rel="noopener"
+            target="_blank"
+          >
+            <Icon name="telegram" size={13} />
+            Обсудить в Telegram
+          </a>
+          <a
+            class="inline-flex items-center gap-1.5 text-xs text-muted transition-colors hover:text-ink"
+            href={site.max}
+            rel="noopener"
+            target="_blank"
+          >
+            <span class="h-[0.9rem] w-[0.9rem] overflow-hidden rounded-[0.22rem]">
+              <MaxIcon size={14} />
+            </span>
+            Написать в Max
+          </a>
+        </div>
       </div>
     </footer>
   </article>

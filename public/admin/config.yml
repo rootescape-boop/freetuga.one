@@ -120,6 +120,39 @@ collections:
   - name: pages
     label: Страницы
     files:
+      - name: home
+        label: Главная
+        file: src/content/pages/home.mdx
+        fields:
+          - name: title
+            label: Заголовок
+            widget: string
+            hint: "Заголовок главной страницы — большой текст вверху."
+          - name: description
+            label: Описание
+            widget: text
+            required: false
+            hint: "Короткое описание проекта под заголовком (1–2 предложения)."
+          - name: banner
+            label: Баннер
+            widget: image
+            required: false
+            hint: "Широкая картинка, идеально 1600×640 px (21:9). Пусто — баннер не показывается."
+          - name: features
+            label: Преимущества
+            widget: list
+            required: false
+            default: []
+            hint: "Карточки преимуществ на главной странице."
+            fields:
+              - name: title
+                label: Заголовок
+                widget: string
+              - name: text
+                label: Описание
+                widget: text
+                required: false
+                hint: "Одно-два предложения о преимуществе."
       - name: about
         label: О проекте
         file: src/content/pages/about.mdx

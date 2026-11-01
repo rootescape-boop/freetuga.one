@@ -1,4 +1,5 @@
 ---
+import { getEntry } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PostCard from '../components/PostCard.astro';
 import FeaturedPost from '../components/FeaturedPost.astro';
@@ -8,6 +9,14 @@ import { collectTags, getPosts, postHref } from '../lib/posts';
 import { sectionList } from '../lib/sections';
 import { dayMonth, plural } from '../lib/format';
 import { site } from '../lib/site';
+
+const home = await getEntry('pages', 'home');
+const heroTitle = home?.data.title ?? 'База знаний по настройке ГУ ECARX.';
+const heroDescription =
+  home?.data.description ??
+  'FreeTUGA001 — сообщество владельцев автомобилей с ГУ ECARX. Настройка и тюнинг головного устройства, дополнительное ПО и инструкции. Всё ПО доступно по модели Donationware.';
+const banner = home?.data.banner;
+const features = home?.data.features ?? [];
 
 const posts = await getPosts();
 const featured = posts.find((post) => post.data.featured) ?? posts[0];
@@ -21,7 +30,7 @@ for (const post of posts) {
 }
 ---
 
-<BaseLayout title={site.title}>
+<BaseLayout title={site.title} description={heroDescription}>
   <section class="container-page pt-14 sm:pt-20">
     <div class="grid gap-12 lg:grid-cols-[1.4fr_0.6fr] lg:items-end">
       <div class="rise">
@@ -31,12 +40,11 @@ for (const post of posts) {
         </p>
 
         <h1 class="display mt-6 max-w-[17ch] text-[clamp(2.6rem,6.4vw,4.9rem)]">
-          База знаний по настройке ГУ ECARX.
+          {heroTitle}
         </h1>
 
         <p class="mt-6 max-w-xl text-[1.05rem] leading-relaxed text-muted">
-          FreeTUGA001 — сообщество владельцев автомобилей с ГУ ECARX. Настройка и тюнинг головного
-          устройства, дополнительное ПО и инструкции. Всё ПО доступно по модели Donationware.
+          {heroDescription}
         </p>
 
         <div class="mt-8 flex flex-wrap items-center gap-3">
@@ -73,6 +81,30 @@ for (const post of posts) {
       </aside>
     </div>
   </section>
+
+  {banner && (
+    <section class="container-page pt-10">
+      <img
+        src={banner}
+        alt=""
+        class="aspect-[21/9] w-full max-h-[26rem] rounded-[1.6rem] border border-line object-cover"
+        loading="eager"
+      />
+    </section>
+  )}
+
+  {features.length > 0 && (
+    <section class="container-page pt-10">
+      <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {features.map((feature) => (
+          <div class="rounded-2xl border border-line bg-surface/60 p-6">
+            <h3 class="font-serif text-lg font-medium tracking-[-0.01em]">{feature.title}</h3>
+            {feature.text && <p class="mt-2 text-sm leading-relaxed text-muted">{feature.text}</p>}
+          </div>
+        ))}
+      </div>
+    </section>
+  )}
 
   <section class="container-page pt-12">
     <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">

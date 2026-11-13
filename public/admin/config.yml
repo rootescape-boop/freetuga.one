@@ -40,7 +40,7 @@ collections:
         label: Раздел
         widget: select
         options:
-          - { label: Материалы, value: materials }
+          - { label: Инструкции, value: materials }
           - { label: ЧАВО, value: faq }
           - { label: Релизы, value: releases }
           - { label: ПО, value: software }
@@ -154,7 +154,7 @@ collections:
                 required: false
                 hint: "Одно-два предложения о преимуществе."
       - name: about
-        label: О проекте
+        label: О FreeTUGA001
         file: src/content/pages/about.mdx
         fields:
           - name: title

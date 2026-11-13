@@ -23,13 +23,13 @@ export interface SectionConfig {
 export const sections: Record<SectionSlug, SectionConfig> = {
   materials: {
     slug: 'materials',
-    label: 'Материалы',
+    label: 'Инструкции',
     eyebrow: 'База знаний',
-    intro: 'Документация проекта, технические разборы, инструкции и видео.',
-    description: 'Все материалы базы знаний FreeTUGA001: документация, разборы, инструкции и видео.',
-    empty: 'Материалов пока нет. Первые появятся здесь.',
-    backLabel: 'Все материалы',
-    otherLabel: 'Другие материалы',
+    intro: 'Пошаговые руководства проекта: установка, настройка, разборы и видео.',
+    description: 'Все инструкции базы знаний FreeTUGA001: установка, настройка, разборы и видео.',
+    empty: 'Инструкций пока нет. Первые появятся здесь.',
+    backLabel: 'Все инструкции',
+    otherLabel: 'Другие инструкции',
   },
   faq: {
     slug: 'faq',

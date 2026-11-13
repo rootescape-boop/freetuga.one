@@ -10,5 +10,5 @@ export const nav = [
   { label: sections.software.label, href: '/software' },
   { label: 'Теги', href: '/tags' },
   { label: 'Поддержать', href: '/donate' },
-  { label: 'О проекте', href: '/about' },
+  { label: 'О FreeTUGA001', href: '/about' },
 ];

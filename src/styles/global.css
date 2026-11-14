@@ -525,7 +525,18 @@ a.tag:hover {
 }
 
 .prose .video {
-  margin-top: 2em;
+  margin-block: 2em;
+  width: calc(100vw - 2.5rem);
+  max-width: 1116px;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+@media (min-width: 640px) {
+  .prose .video {
+    width: calc(100vw - 4rem);
+  }
 }
 
 /* shiki dual theme */

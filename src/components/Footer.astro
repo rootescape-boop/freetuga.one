@@ -40,7 +40,7 @@ const years = year > start ? `${start}–${year}` : `${year}`;
       </nav>
 
       <div>
-        <p class="eyebrow">Проект</p>
+        <p class="eyebrow">Сообщество</p>
         <ul class="mt-4 space-y-2.5 text-sm">
           <li>
             <a
@@ -63,11 +63,6 @@ const years = year > start ? `${start}–${year}` : `${year}`;
               Max
             </a>
           </li>
-          <li>
-            <a class="inline-flex items-center gap-2 text-muted transition-colors hover:text-ink" href="/admin/">
-              Админка
-            </a>
-          </li>
         </ul>
       </div>
     </div>
@@ -78,6 +73,9 @@ const years = year > start ? `${start}–${year}` : `${year}`;
       <p>© {years} {site.title}</p>
       <p class="flex items-center gap-5">
         <span>Сделано на Astro</span>
+        <a class="inline-flex items-center gap-1 transition-colors hover:text-ink" href="/admin/">
+          Админка
+        </a>
         <a class="inline-flex items-center gap-1 transition-colors hover:text-ink" href="#top">
           Наверх <Icon name="chevron-up" size={13} />
         </a>

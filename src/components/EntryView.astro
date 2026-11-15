@@ -83,7 +83,7 @@ const components = { YouTube, Rutube, Vk, Video };
       </div>
     </header>
 
-    {cover && (
+    {videos.length === 0 && cover && (
       <div class="container-page mt-10">
         <img
           src={cover}
